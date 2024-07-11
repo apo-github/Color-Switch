@@ -1,5 +1,16 @@
-console.log("js読み込んだよ")
-// document.body.style.backgroundColor = "gold";
+console.log("Loaded JS");
 
-// AWSマネジメントコンソールの背景を変更
-document.querySelector(".globalNav-122").style.backgroundColor = "crimson";
+const HEADER_COLOR = "#dc143c";
+const SELECTOR = ".globalNav-122";
+const set_interval_id = setInterval(findTargetElement, 1000);
+
+function findTargetElement() {
+    if(document.querySelector(SELECTOR) != null) {
+        console.log("changed the header color!");
+        document.querySelector(SELECTOR).style.backgroundColor = HEADER_COLOR;
+        clearInterval(set_interval_id);
+    }
+}
+
+
+

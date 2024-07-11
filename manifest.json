@@ -6,10 +6,10 @@
     "permissions":["scripting", "activeTab"],
     "content_scripts": [
         {
-        "matches": ["*://*/*"],
-        "js": [
-            "./scripts/content-script.js"
-        ]
+            "matches": ["https://ap-northeast-1.console.aws.amazon.com/*"],
+            "js": [
+                "./scripts/content-script.js"
+            ]
         }
     ]
 }
