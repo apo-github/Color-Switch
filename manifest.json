@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3, 
+    "version": "1.0", 
+    "name": "change the specific page color", 
+    "description": "change the specific page color",
+    "permissions":["scripting", "activeTab"],
+    "content_scripts": [
+        {
+        "matches": ["*://*/*"],
+        "js": [
+            "./scripts/content-script.js"
+        ]
+        }
+    ]
+}
