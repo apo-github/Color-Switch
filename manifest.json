@@ -3,7 +3,7 @@
     "version": "1.0", 
     "name": "change the specific page color", 
     "description": "change the specific page color",
-    "permissions":["scripting", "activeTab", "storage"],
+    "permissions":["scripting", "activeTab", "storage", "tabs"],
     "content_scripts": [
         {
             "matches": ["https://*.console.aws.amazon.com/*"],
