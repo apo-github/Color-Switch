@@ -2,55 +2,57 @@ console.log("content-script");
 const USER_ID = "851725623947"; //851725623947
 const AWS_USER_NAME_CSS_SELECTOR = "#nav-usernameMenu";
 const HEADER_COLOR = "crimson"; //crimson, green, navy
-const HEADER_CSS_SELECTOR = ".globalNav-122";
+const QUERY_SELECTOR = "#awsc-navigation-container";
+const DEFAULT_URL = "https://*.console.aws.amazon.com/*"
+const set_interval_id = setInterval(getParams, 1000);
 
 chrome.runtime.onMessage.addListener((request) => {
     // 期待通りのリクエストかどうかをチェック
     console.log("呼び出されました！！")
-    if (request.key === 'to-ontent-script') {
-        AwsChangeColor();
+    if (request.key === 'to-content-script') {
+        getParams();
     }
 });
 
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
-    let options = []
     chrome.storage.sync.get({
-        url_row_1: "https://*.console.aws.amazon.com/*",
-        css_selector_row_1: HEADER_CSS_SELECTOR,
+        url_row_1: DEFAULT_URL,
+        query_selector_row_1: QUERY_SELECTOR,
         color_row_1:HEADER_COLOR,
         aws_id_row_1: USER_ID,
     }, function (datas) { 
-        options.push(datas.url_row_1);
-        options.push(datas.css_selector_row_1);
-        options.push(datas.color_row_1);
-        options.push(datas.aws_id_row_1);
+        let options = {};
+        options.url_row_1 = datas.url_row_1;
+        options.query_selector_row_1 = datas.query_selector_row_1;
+        options.color_row_1 = datas.color_row_1;
+        options.aws_id_row_1 = datas.aws_id_row_1;
+        AwsChangeColor(options);
     });
-    return options
 }
 
 
-function AwsChangeColor() {
+function AwsChangeColor(options) {
     console.log("loading page....");
-    options = getParams(); //storageから値を取得
-    console.log("options ====> ", options); //デバッグ用
-
-    if(document.querySelector( HEADER_CSS_SELECTOR) != null) {
+    console.log(options.aws_id_row_1)
+    console.log(options.query_selector_row_1)
+    console.log(options.color_row_1)
+    if(document.querySelector(options.query_selector_row_1) != null) {  //ここが通らん
         console.log("user check!")
         let get_user_name = document.querySelector(AWS_USER_NAME_CSS_SELECTOR).firstElementChild.textContent
         get_user_name = get_user_name.substring(get_user_name.indexOf("@")+1).replace(/[-]/g,"");
         get_user_name = get_user_name.replace(" ", "");
         console.log("USER_ID: ", get_user_name); 
-        if (get_user_name == USER_ID){
+        if (get_user_name == options.aws_id_row_1){
             console.log("matched AWS account ID!");
             const style = document.createElement("style");
             style.innerHTML = `
-            ${HEADER_CSS_SELECTOR} {
-                background-color: ${HEADER_COLOR} !important;
+            ${options.query_selector_row_1} {
+                background-color: ${options.color_row_1}!important;
             }
             `;
             document.head.appendChild(style);
-            // document.querySelector( HEADER_CSS_SELECTOR).style.backgroundColor = HEADER_COLOR;
+            // document.querySelector( QUERY_SELECTOR).style.backgroundColor = HEADER_COLOR;
             clearInterval(set_interval_id);
         } else {
             clearInterval(set_interval_id);

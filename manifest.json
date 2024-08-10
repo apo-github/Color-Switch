@@ -12,5 +12,7 @@
             ]
         }
     ],
-    "options_page": "./view/options.html"
+    "action": {
+        "default_popup": "./view/options.html"
+    }
 }
