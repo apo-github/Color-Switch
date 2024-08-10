@@ -13,6 +13,6 @@
         }
     ],
     "action": {
-        "default_popup": "./view/options.html"
+        "default_popup": "./view/popup.html"
     }
 }
