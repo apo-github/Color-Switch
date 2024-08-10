@@ -5,7 +5,6 @@ save_button.addEventListener( "click", () => {
 
 
 
-
 function setParams(){
     console.log("読まれました")
     const URL_1 = document.querySelector("#url-row-1").value;
@@ -19,14 +18,15 @@ function setParams(){
         color_row_1:COLOR_1,
         aws_id_row_1: AWS_ID_1,
     }, function () {
-        chrome.tabs.query( {active:true, currentWindow:true}, function(tabs){
-
-            // 取得したタブid(tabs[0].id)を利用してsendMessageする
-            chrome.runtime.sendMessage({ key: 'to-content-script' });
-            });
+        console.log("saved")
         alert("saved your settings(｀・ω・´)");
     });
 
+    chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
+        chrome.runtime.sendMessage( tabs[0].id, { key: 'to-content-script' });
+        // 取得したタブid(tabs[0].id)を利用してsendMessageする
+    });
+    
 
     
 }

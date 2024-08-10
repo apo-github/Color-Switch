@@ -2,7 +2,7 @@ console.log("content-script");
 const USER_ID = "851725623947"; //851725623947
 const AWS_USER_NAME_CSS_SELECTOR = "#nav-usernameMenu";
 const HEADER_COLOR = "crimson"; //crimson, green, navy
-const QUERY_SELECTOR = "#awsc-navigation-container";
+const QUERY_SELECTOR = ".globalNav-124";
 const DEFAULT_URL = "https://*.console.aws.amazon.com/*"
 const set_interval_id = setInterval(getParams, 1000);
 
@@ -44,7 +44,7 @@ function AwsChangeColor(options) {
         get_user_name = get_user_name.replace(" ", "");
         console.log("USER_ID: ", get_user_name); 
         if (get_user_name == options.aws_id_row_1){
-            console.log("matched AWS account ID!");
+            console.log("matched AWS ID!");
             const style = document.createElement("style");
             style.innerHTML = `
             ${options.query_selector_row_1} {
