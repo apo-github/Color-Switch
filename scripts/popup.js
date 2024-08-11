@@ -1,4 +1,5 @@
 getParams(); //初期ロード時の設定読み込み
+window.rowNum = document.querySelectorAll(".row").length;
 save_button = document.querySelector("#save");
 save_button.addEventListener( "click", () => {
     setParams();
@@ -15,8 +16,9 @@ save_button.addEventListener( "click", () => {
 
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
+    // chrome.storage.sync.clear();  // 開発用
     chrome.storage.sync.get(null, function (datas) { 
-        const data_length = (Object.keys(datas).length) / 5;
+        const data_length = Object.keys(datas).length > 0 ? (Object.keys(datas).length) / 5 : 1;
         console.log(data_length);
         console.log(datas);
 
