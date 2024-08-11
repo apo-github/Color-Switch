@@ -11,6 +11,15 @@ save_button.addEventListener( "click", () => {
     setParams();
 })
 
+// // ボタンの非活性処理を追加
+// const service_select_btn = document.querySelector("select-service");
+// service_select_btn.addEventListener( "click", () => {
+//     if (service_select_btn.value == "") {
+//         service_select_btn.disabled = true;
+//     }
+// })
+
+
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
     chrome.storage.sync.get({
@@ -39,7 +48,7 @@ function setParams(){
         color_row_1:COLOR_1,
         aws_id_row_1: AWS_ID_1,
     }, function () {
-        alert("saved your settings(｀・ω・´)");
+        alert("Saved your settings(｀・ω・´)");
     });
 
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
