@@ -1,7 +1,16 @@
-let rowNumber = document.querySelectorAll(".row").length+1;
+window.rowNum = document.querySelectorAll(".row").length;
+window.addBlock = addBlock;
 
 document.querySelector(".btn-outline-secondary").addEventListener('click', function(){
 
+    console.log(rowNum);
+    rowNum++;
+    console.log(rowNum);
+    addBlock(rowNum);
+})
+
+
+function addBlock(rowNumber){
     const URL = `url-row-${rowNumber}`;
     const CSS_SELECTOR = `css-selector-row-${rowNumber}`;
     const COLOR = `color-row-${rowNumber}`;
@@ -61,6 +70,6 @@ document.querySelector(".btn-outline-secondary").addEventListener('click', funct
     
     const plusButton = document.querySelector("#plus");
     plusButton.insertAdjacentHTML('beforebegin', newRowHTML);
+}
 
-    rowNumber++;
-})
+

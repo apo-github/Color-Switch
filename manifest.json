@@ -9,7 +9,8 @@
             "matches": ["https://*.console.aws.amazon.com/*"],
             "js": [
                 "./scripts/content-script.js"
-            ]
+            ],
+            "type": "module"
         }
     ],
     "action": {
