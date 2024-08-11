@@ -1,10 +1,8 @@
-window.rowNum = document.querySelectorAll(".row").length;
 window.addBlock = addBlock;
 
 document.querySelector(".btn-outline-secondary").addEventListener('click', function(){
-
-    console.log(rowNum);
-    rowNum++;
+    
+    window.rowNum = document.querySelectorAll(".row").length+1;
     console.log(rowNum);
     addBlock(rowNum);
 })

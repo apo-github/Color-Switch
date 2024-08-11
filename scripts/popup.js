@@ -17,6 +17,7 @@ function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
     chrome.storage.sync.get(null, function (datas) { 
         const data_length = (Object.keys(datas).length) / 5;
+        console.log(data_length);
         console.log(datas);
 
         for (i = 1; i <= data_length; i++) {
