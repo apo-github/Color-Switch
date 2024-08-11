@@ -16,29 +16,43 @@ save_button.addEventListener( "click", () => {
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
     chrome.storage.sync.get(null, function (datas) { 
-        const data_length = Object.keys(datas).length;
+        const data_length = (Object.keys(datas).length) / 5;
+        console.log(datas);
+
         for (i = 1; i <= data_length; i++) {
+            if (i > 1){
+                addBlock(i);
+            }
             document.querySelector(`#url-row-${i}`).value = datas[`url_row_${i}`];
             document.querySelector(`#css-selector-row-${i}`).value = datas[`query_selector_row_${i}`];
             document.querySelector(`#color-row-${i}`).value = datas[`color_row_${i}`];
+            document.querySelector(`#service-row-${i}`).value = datas[`service_row_${i}`];
             document.querySelector(`#id-row-${i}`).value = datas[`id_row_${i}`];        
         }
     });
 }
 
 function setParams(){
-    console.log("Popup.js > setParams")
-    const URL_1 = document.querySelector("#url-row-1").value;
-    const QUERY_SELECTOR_1 = document.querySelector("#css-selector-row-1").value;
-    const COLOR_1 = document.querySelector("#color-row-1").value;
-    const ID_1 = document.querySelector("#id-row-1").value;
+    console.log("Popup.js > setParams");
+    data_obj = {};
 
-    chrome.storage.sync.set({
-        "url_row_1": URL_1,
-       "query_selector_row_1": QUERY_SELECTOR_1,
-        "color_row_1":COLOR_1,
-        "id_row_1": ID_1,
-    }, function () {
+    for (i = 1; i <= rowNum; i++){
+        console.log("rowNum", rowNum)
+        console.log("save-num:", i);
+        const URL = document.querySelector(`#url-row-${i}`).value;
+        const CSS_SELECTOR = document.querySelector(`#css-selector-row-${i}`).value;
+        const COLOR = document.querySelector(`#color-row-${i}`).value;
+        const SERVICE = document.querySelector(`#service-row-${i}`).value;
+        const ID = document.querySelector(`#id-row-${i}`).value;
+
+        data_obj[`url_row_${i}`] = URL;
+        data_obj[`query_selector_row_${i}`] = CSS_SELECTOR;
+        data_obj[`color_row_${i}`] = COLOR;
+        data_obj[`service_row_${i}`] = SERVICE;
+        data_obj[`id_row_${i}`] = ID; 
+    }
+
+    chrome.storage.sync.set(data_obj, function () {
         alert("Saved your settings(｀・ω・´)");
     });
 
