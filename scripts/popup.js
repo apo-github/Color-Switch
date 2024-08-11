@@ -1,9 +1,30 @@
+const HEADER_COLOR = "crimson"; //crimson, green, navy
+const QUERY_SELECTOR = ".globalNav-123";
+const DEFAULT_URL = "https://*.console.aws.amazon.com/*";
+const AWS_ID = "851725623947"; //851725623947
+
+
+
+getParams(); //初期ロード時の設定読み込み
 save_button = document.querySelector("#save");
 save_button.addEventListener( "click", () => {
     setParams();
 })
 
-
+function getParams() {
+    // storage.sync.get()値がなければデフォルト値が採用される
+    chrome.storage.sync.get({
+        url_row_1: DEFAULT_URL,
+        query_selector_row_1: QUERY_SELECTOR,
+        color_row_1: HEADER_COLOR,
+        aws_id_row_1: AWS_ID
+    }, function (datas) { 
+        document.querySelector("#url-row-1").value = datas.url_row_1;
+        document.querySelector("#css-selector-row-1").value = datas.query_selector_row_1;
+        document.querySelector("#color-row-1").value = datas.color_row_1;
+        document.querySelector("#aws-id-row-1").value = datas.aws_id_row_1;        
+    });
+}
 
 function setParams(){
     console.log("Popup.js > setParams")
@@ -22,7 +43,6 @@ function setParams(){
     });
 
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        // console.log({ tabs })
         // content_script へデータを送る
         chrome.tabs.sendMessage(tabs[0].id, { // content_script はタブごとに存在するため ID 指定する必要がある
           key: 'to-content-script'
