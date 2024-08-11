@@ -34,6 +34,7 @@ function getParams() {
 }
 
 function setParams(){
+    chrome.storage.sync.clear();  // 開発用
     console.log("Popup.js > setParams");
     data_obj = {};
 
