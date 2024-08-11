@@ -4,16 +4,19 @@
     <title>AWS Color Change Extension Options</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../bootstrap-5.3.0-dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="./css/style.css" />
     <style type="text/css">
-      .container {
-        min-width: 800px;
+      body {
+        width: 800px;
+        min-height: 300px;
+      }
+      .container{
+        max-width: 750px;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1 class="h3 mt-3">Settings</h1>
+      <h1 class="h3 mt-5">Settings</h1>
         <!-- 行1 -->
         <div class="row">
             <div class="col-5">
@@ -26,30 +29,40 @@
                     />
                 </div>
             </div>
-            <div class="col">
+            <div class="col-2 pe-0">
                 <div class="mb-3">
                     <label class="form-label">CSS Selector</label>
                     <input
-                    class="form-control"
+                    class="form-control" 
                     id="css-selector-row-1"
-                    placeholder=".globalNav-122"
+                    placeholder=".globalNav-123"
                     />
                 </div>
             </div>
-            <div class="col">
+            <div class="col ps-0">
               <div class="mb-3">
                   <label class="form-label">Color</label>
                   <select id="color-row-1" class="form-select form-select">
-                      <option value="crimson">crimson</option>
-                      <option value="green">green</option>
-                      <option value="blue">blue</option>
-                      <option value="yellow">yellow</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="#CC9900">Gold</option>
+                    <option value="crimson">Crimson</option>
                   </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col pe-0">
               <div class="mb-3">
-                  <label class="form-label">AWS ID (or blank)</label>
+                  <label class="form-label">service</label>
+                  <select id="service-row-1" class="select-service form-select form-select">
+                    <option value="none"></option>
+                    <option value="aws">AWS</option>
+                    <option value="azure">Azure</option>
+                  </select>
+              </div>
+            </div>
+            <div class="col-2 ps-0">
+              <div class="mb-3">
+                  <label class="form-label">ID (or blank)</label>
                   <input
                     class="form-control"
                     id="aws-id-row-1"
@@ -57,44 +70,51 @@
                     />
               </div>
             </div>
-        </div>
 
           <!-- 行2 -->
-        <div class="row">
           <div class="col-5">
-              <div class="mb-3">
-                  <input
-                  class="form-control"
-                  id="url-row-2"
-                  placeholder="https://*.console.aws.amazon.com/*"
-                  />
-              </div>
+            <div class="mb-3">
+                <input
+                class="form-control"
+                id="url-row-2"
+                placeholder=""
+                />
+            </div>
           </div>
-          <div class="col">
+          <div class="col-2 pe-0">
               <div class="mb-3">
                   <input
-                  class="form-control"
+                  class="form-control" 
                   id="css-selector-row-2"
-                  placeholder=".globalNav-122"
+                  placeholder=""
                   />
               </div>
           </div>
-          <div class="col">
+          <div class="col ps-0">
             <div class="mb-3">
                 <select id="color-row-2" class="form-select form-select">
-                    <option value="red">red</option>
-                    <option value="green">green</option>
-                    <option value="blue">blue</option>
-                    <option value="yellow">yellow</option>
+                  <option value="blue">Blue</option>
+                  <option value="green">Green</option>
+                  <option value="#CC9900">Gold</option>
+                  <option value="crimson">Crimson</option>
                 </select>
             </div>
           </div>
-          <div class="col">
+          <div class="col pe-0">
+            <div class="mb-3">
+                <select id="service-row-2" class="select-service form-select form-select">
+                  <option value="none"></option>
+                  <option value="aws">AWS</option>
+                  <option value="azure">Azure</option>
+                </select>
+            </div>
+          </div>
+          <div class="col-2 ps-0">
             <div class="mb-3">
                 <input
                   class="form-control"
                   id="aws-id-row-2"
-                  placeholder="012345678901"
+                  placeholder=""
                   />
             </div>
           </div>
@@ -109,7 +129,6 @@
           Save
         </button>
       </div>
-      <div class="mb-3"></div>
     </div>
     
     <script src="../bootstrap-5.3.0-dist/js/bootstrap.bundle.js"></script>
