@@ -6,7 +6,7 @@
     "permissions":["scripting", "activeTab", "storage", "tabs"],
     "content_scripts": [
         {
-            "matches": ["https://*.console.aws.amazon.com/*"],
+            "matches": ["<all_urls>"],
             "js": [
                 "./scripts/content-script.js"
             ],
