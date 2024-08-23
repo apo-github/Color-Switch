@@ -19,7 +19,7 @@ function getParams() {
     // chrome.storage.sync.clear();  // 開発用
     chrome.storage.sync.get(null, function (datas) {
         const data_num = Object.keys(datas).length
-        const data_length = variable !== undefined ? data_num/5 : 0;
+        const data_length = data_num !== undefined ? data_num/5 : 0;
         console.log(data_length);
         console.log(datas);
 
