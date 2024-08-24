@@ -23,7 +23,7 @@ function getParams() {
         console.log(data_length);
         console.log(datas);
 
-        for (i = 1; i <= data_length; i++) {
+        for (let i = 1; i <= data_length; i++) {
             if (i > 1){
                 addBlock(i);
             }
@@ -41,7 +41,7 @@ function setParams(){
     console.log("Popup.js > setParams");
     data_obj = {};
 
-    for (i = 1; i <= rowNum; i++){
+    for (let i = 1; i <= rowNum; i++){
         console.log("rowNum", rowNum)
         console.log("save-num:", i);
         const URL = document.querySelector(`#url-row-${i}`).value;

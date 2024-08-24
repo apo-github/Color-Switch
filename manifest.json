@@ -13,6 +13,10 @@
             "type": "module"
         }
     ],
+    "background": {
+        "service_worker":"./scripts/background.js",
+        "permissions": false
+    },
     "action": {
         "default_popup": "./view/popup.html"
     }
