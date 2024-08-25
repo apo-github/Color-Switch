@@ -61,11 +61,13 @@ function setParams(){
         alert("Saved your settings(｀・ω・´)");
     });
 
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        // content_script へデータを送る
-        chrome.tabs.sendMessage(tabs[0].id, { // content_script はタブごとに存在するため ID 指定する必要がある
-          message: 'saved'
-        })
+    //
+    chrome.runtime.sendMessage({ message: "to_content_script" }, (response) => {
+        if (chrome.runtime.lastError) {
+            console.error("content-script.js呼び出し時エラー:", chrome.runtime.lastError.message);
+        }else{
+            console.log(response.message);
+        }
     });
     
 }

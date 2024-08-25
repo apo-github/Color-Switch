@@ -1,70 +1,88 @@
 // cssをインジェクトする
-
 console.log("content-script");
 
-
+const AWS_USER_NAME_CSS_SELECTOR = "#nav-usernameMenu";
+const AZURE_USER_NAME_CSS_SELECTOR = ".fxs-avatarmenu-username"
+const MAX_TRY_COUNT = 10;
+let wait_count = 0;
+let interval_id;
 
 // backgroundを最初に呼び出す
-chrome.runtime.sendMessage({ message: "to_background" }); //ここはOK
-
-// cssをインジェクト
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
-    const { options, func } = request;
-    // which service to use?
-    results = false;
-    switch (func){
-        case "aws":
-            results = AwsChangeColor(options);
-            break;
-        case "azure":
-            results = AzureChangeColor(options);
-            break;
-        default:
-            results = DefaultChangeColor(options);
+chrome.runtime.sendMessage({ message: "to_background" }, (response) => {
+    if (chrome.runtime.lastError) {
+        console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
+    }else{
+        console.log(response.message);
     }
-    sendResponse(results);
 });
 
 
-// 関数群
+// cssをインジェクト
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
+    if (request.message === 'to_content_script') { // 特定の関数からのリクエストかどうかをチェック
+        const { options, func } = request;
+        show_settngs(options);
+
+        // which service to use?
+        switch (func){
+            case "aws":
+                console.log("=== Aws Page ===\n");
+                if (!interval_id){
+                    interval_id = setInterval(() => AwsChangeColor(options), 1000);
+                }
+                break;
+            case "azure":
+                console.log("=== Azure Page ===\n");
+                if (!interval_id){
+                    interval_id = setInterval(() => AzureChangeColor(options), 1000);
+                } 
+                break;
+            default:
+                console.log("=== Dafault Page ===\n"); 
+                if (!interval_id){
+                    interval_id = setInterval(() => DefaultChangeColor(options), 1000);
+                } 
+        }
+    }
+    sendResponse({message: "content-script received the request"});
+    return true;
+});
+
+
+function wait_loading(){
+    // pageロード待機
+    if (wait_count < MAX_TRY_COUNT){
+        console.log("Loading page...");
+        wait_count += 1;
+    }else{
+        clearInterval(interval_id);
+        interval_id = null;
+    }
+}
 
 function DefaultChangeColor(options){
-    console.log("=== Dafault Page ===\n"); 
-    console.log("loading page....");
-    show_settngs(options);
-    
-    add_style(options);
-    return true;
-    // clearInterval(set_interval_id);
+    if(document.querySelector(options.query_selector_row) != null) { 
+        add_style(options);
+    }
+    wait_loading();
 }
 
 function AwsChangeColor(options) {
-    console.log("=== Aws Page ===\n"); 
-    console.log("loading page....");
-    show_settngs(options);
-
     if(document.querySelector(options.query_selector_row) != null) { 
         console.log("user check!");
         user_id = aws_get_user_id()
-
+        
         if (user_id == options.id_row){
             console.log("matched AWS ID!");
             add_style(options);
-            clearInterval(set_interval_id);
-            return true;
-        } else {
+        } else { // 色をデフォルトの状態に戻す
             remove_style();
-            clearInterval(set_interval_id);
-            return true;
         }
     }
-    return false;
+    wait_loading();
 }
 
 function AzureChangeColor(options) {
-    console.log("=== Azure Page ===\n"); 
-    console.log("loading page....");
-    show_settngs(options);
 
     if(document.querySelector(options.query_selector_row) != null) { 
         console.log("user check!");
@@ -73,15 +91,10 @@ function AzureChangeColor(options) {
         if (user_id == options.id_row){
             console.log("matched Azure ID!");
             add_style(options);
-            clearInterval(set_interval_id);
-            return true;
         } else {
             remove_style();
-            clearInterval(set_interval_id);
-            return true;
         }
     }
-    return false;
 }
 
 function show_settngs(options){
@@ -90,7 +103,6 @@ function show_settngs(options){
     console.log("Color: ", options.color_row);
     console.log("service_row", options.service_row)
     console.log("AWS ID: ", options.id_row);
-    console.log("Tab Id: ", options.tab_id);
     console.log("=================");
 }
 
@@ -118,9 +130,17 @@ function add_style(options){
     }
     `;
     document.head.appendChild(style);
+
+    // intervalを終える
+    clearInterval(interval_id);
+    interval_id = null;
 }
 
 function remove_style(){
     const element = document.head.lastElementChild;
     element.remove();
+
+    // intervalを終える
+    clearInterval(interval_id);
+    interval_id = null;
 }
