@@ -95,6 +95,7 @@ function AzureChangeColor(options) {
             remove_style();
         }
     }
+    wait_loading();
 }
 
 function show_settngs(options){

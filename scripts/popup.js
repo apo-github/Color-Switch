@@ -94,9 +94,9 @@ function setParams(){
     });
 
     //
-    chrome.runtime.sendMessage({ message: "to_content_script" }, (response) => {
+    chrome.runtime.sendMessage({ message: "to_background" }, (response) => {
         if (chrome.runtime.lastError) {
-            console.error("content-script.js呼び出し時エラー:", chrome.runtime.lastError.message);
+            console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
         }else{
             console.log(response.message);
         }
