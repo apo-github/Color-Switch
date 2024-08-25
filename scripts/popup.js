@@ -121,23 +121,25 @@ function deleteBrock(delete_No){
 
 function updateRowId(){
     let row_number = []
-    document.querySelectorAll('input[id^="url-row-"]').forEach(element => {
-        row_number.push(element.id.match(/\d+/)[0]);
+    document.querySelectorAll('input[id^="url-row-"]').forEach((element, i) => {
+        row_number.push({oldNo: element.id.match(/\d+/)[0], newNo: i+1});
     });
     console.log(row_number);
 
-    row_number.forEach((item, i) => {
-        console.log(item, i);
-        console.log(document.querySelector(`#url-row-${item}`));
-        console.log(row_number);
+    row_number.forEach(item => {
+        console.log("item: ", item);
+        // console.log(document.querySelector(`#url-row-${item}`).id);
+        // console.log(document.querySelector(`#url-row-${item}`));
+        // console.log(row_number);
 
-        document.querySelector(`#url-row-${item}`).id = `url-row-${i+1}`;
-        document.querySelector(`#css-selector-row-${item}`).id = `css-selector-row-${i+1}`;
-        document.querySelector(`#color-row-${item}`).id = `color-row-${i+1}`;
-        document.querySelector(`#service-row-${item}`).id = `service-row-${i+1}`;
-        document.querySelector(`#id-row-${item}`).id = `id-row-${i+1}`;
+        document.querySelector(`#url-row-${item.oldNo}`).id = `url-row-${item.newNo}`;
+        document.querySelector(`#css-selector-row-${item.oldNo}`).id = `css-selector-row-${item.newNo}`;
+        document.querySelector(`#color-row-${item.oldNo}`).id = `color-row-${item.newNo}`;
+        document.querySelector(`#service-row-${item.oldNo}`).id = `service-row-${item.newNo}`;
+        document.querySelector(`#id-row-${item.oldNo}`).id = `id-row-${item.newNo}`;
+        document.querySelector(`#delete-row-${item.oldNo}`).id = `delete-row-${item.newNo}`;
 
-        console.log(document.querySelector(`#url-row-${item}`).id);
+        console.log(document.querySelector(`#url-row-${item.newNo}`).id);
         console.log("end")
     });
 }
