@@ -1,24 +1,9 @@
-getParams() //初期ロード時の設定読み込み
-const save_button = document.querySelector("#save");
-const add_button = document.querySelector("#plus");
-let isdelete = false;
-
-
+getParams(); //初期ロード時の設定読み込み
+window.rowNum = document.querySelectorAll(".row").length;
+save_button = document.querySelector("#save");
 save_button.addEventListener( "click", () => {
-    if (isdelete) {
-        deleteParams()
-    }
-    setParams(rowNum);
-    isdelete = false;
-});
-
-add_button.addEventListener('click', function(){
-    // rowNum = document.querySelectorAll(".row").length;
-    console.log("rownum: ", rowNum);
-    rowNum++;
-    console.log("rownum: ", rowNum);
-    addBlock(rowNum);
-});
+    setParams();
+})
 
 // // ボタンの非活性処理を追加
 // const service_select_btn = document.querySelector("select-service");
@@ -48,39 +33,23 @@ function getParams() {
             document.querySelector(`#service-row-${i}`).value = datas[`service_row_${i}`];
             document.querySelector(`#id-row-${i}`).value = datas[`id_row_${i}`];        
         }
-
-        window.rowNum = document.querySelectorAll(".row").length; // グローバル変数
-        
-        // 削除ボタン
-        delete_button = document.querySelectorAll('button[id^="delete-row-"]');
-        console.log(delete_button);
-        delete_button.forEach(button => {
-            button.addEventListener('click', function(event) {
-                const clickedButtonId = event.target.id;
-                console.log(clickedButtonId);
-                const buttonNumber = clickedButtonId.match(/\d+/);
-                isdelete = true;
-        
-                deleteBrock(buttonNumber);
-            });
-        });
     });
 }
 
 function setParams(){
     chrome.storage.sync.clear();  // 開発用
     console.log("Popup.js > setParams");
-    console.log("rowNum: ", rowNum);
-    let data_obj = {};
+    data_obj = {};
 
     for (let i = 1; i <= rowNum; i++){
 
+        console.log("rowNum", rowNum)
         console.log("save-num:", i);
-        let URL = document.querySelector(`#url-row-${i}`).value;
-        let CSS_SELECTOR = document.querySelector(`#css-selector-row-${i}`).value;
-        let COLOR = document.querySelector(`#color-row-${i}`).value;
-        let SERVICE = document.querySelector(`#service-row-${i}`).value;
-        let ID = document.querySelector(`#id-row-${i}`).value;
+        const URL = document.querySelector(`#url-row-${i}`).value;
+        const CSS_SELECTOR = document.querySelector(`#css-selector-row-${i}`).value;
+        const COLOR = document.querySelector(`#color-row-${i}`).value;
+        const SERVICE = document.querySelector(`#service-row-${i}`).value;
+        const ID = document.querySelector(`#id-row-${i}`).value;
 
         data_obj[`url_row_${i}`] = URL;
         data_obj[`query_selector_row_${i}`] = CSS_SELECTOR;
@@ -104,111 +73,6 @@ function setParams(){
     
 }
 
-function deleteParams(){
-    chrome.storage.sync.clear();
-    updateRowId();
-}
-
-
-function deleteBrock(delete_No){
-    document.querySelector(`#url-row-${delete_No}`).remove();
-    document.querySelector(`#css-selector-row-${delete_No}`).remove();
-    document.querySelector(`#color-row-${delete_No}`).remove();
-    document.querySelector(`#service-row-${delete_No}`).remove();
-    document.querySelector(`#id-row-${delete_No}`).remove();
-    document.querySelector(`#delete-row-${delete_No}`).remove();
-    rowNum--;
-    // console.log(rowNum)
-}
-
-
-function updateRowId(){
-    let row_number = []
-    document.querySelectorAll('input[id^="url-row-"]').forEach(element => {
-        row_number.push(element.id.match(/\d+/)[0]);
-    });
-    console.log(row_number);
-
-    row_number.forEach((item, i) => {
-        console.log(item, i);
-        console.log(document.querySelector(`#url-row-${item}`));
-        console.log(row_number);
-
-        document.querySelector(`#url-row-${item}`).id = `url-row-${i+1}`;
-        document.querySelector(`#css-selector-row-${item}`).id = `css-selector-row-${i+1}`;
-        document.querySelector(`#color-row-${item}`).id = `color-row-${i+1}`;
-        document.querySelector(`#service-row-${item}`).id = `service-row-${i+1}`;
-        document.querySelector(`#id-row-${item}`).id = `id-row-${i+1}`;
-
-        console.log(document.querySelector(`#url-row-${item}`).id);
-        console.log("end")
-    });
-}
-
-
-function addBlock(rowNumber){
-    const URL = `url-row-${rowNumber}`;
-    const CSS_SELECTOR = `css-selector-row-${rowNumber}`;
-    const COLOR = `color-row-${rowNumber}`;
-    const SERVICE = `service-row-${rowNumber}`
-    const ID = `id-row-${rowNumber}`;
-    const DELETE = `delete-row-${rowNumber}`
-
-    const newRowHTML = `
-      <div class="row">
-        <div class="col-5">
-          <div class="mb-3">
-              <input
-              class="form-control"
-              id="${URL}"
-              placeholder=""
-              />
-          </div>
-        </div>
-        <div class="col-2 pe-0">
-            <div class="mb-3">
-                <input
-                class="form-control" 
-                id="${CSS_SELECTOR}"
-                placeholder=""
-                />
-            </div>
-        </div>
-        <div class="col ps-0">
-          <div class="mb-3">
-              <select id="${COLOR}" class="form-select form-select">
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="#CC9900">Gold</option>
-                <option value="crimson">Crimson</option>
-              </select>
-          </div>
-        </div>
-        <div class="col pe-0">
-          <div class="mb-3">
-              <select id="${SERVICE}" class="select-service form-select form-select">
-                <option value="none"></option>
-                <option value="aws">AWS</option>
-                <option value="azure">Azure</option>
-              </select>
-          </div>
-        </div>
-        <div class="col-2 ps-0">
-          <div class="mb-3">
-              <input
-                class="form-control"
-                id="${ID}"
-                placeholder=""
-                />
-          </div>
-        </div>
-        <button class="form-control btn btn-danger" id="${DELETE}"></button>
-      </div>
-    `;
-    
-    const plusButton = document.querySelector("#plus");
-    plusButton.insertAdjacentHTML('beforebegin', newRowHTML);
-}
 
 
 

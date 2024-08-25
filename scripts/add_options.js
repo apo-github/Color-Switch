@@ -1,10 +1,9 @@
 window.addBlock = addBlock;
 
-document.querySelector("#plus").addEventListener('click', function(){
-  rowNum = document.querySelectorAll(".row").length;
-  rowNum++;
-  console.log(rowNum);
-  addBlock(rowNum);
+document.querySelector(".btn-outline-secondary").addEventListener('click', function(){
+    rowNum++;
+    console.log(rowNum);
+    addBlock(rowNum);
 })
 
 
@@ -14,7 +13,6 @@ function addBlock(rowNumber){
     const COLOR = `color-row-${rowNumber}`;
     const SERVICE = `service-row-${rowNumber}`
     const ID = `id-row-${rowNumber}`;
-    const DELETE = `delete-row-${rowNumber}`
 
     const newRowHTML = `
       <div class="row">
@@ -64,7 +62,6 @@ function addBlock(rowNumber){
                 />
           </div>
         </div>
-        <button class="form-control btn btn-danger" id="${DELETE}"></button>
       </div>
     `;
     
