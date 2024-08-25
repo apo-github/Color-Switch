@@ -64,7 +64,7 @@ function setParams(){
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         // content_script へデータを送る
         chrome.tabs.sendMessage(tabs[0].id, { // content_script はタブごとに存在するため ID 指定する必要がある
-          key: 'to-content-script'
+          message: 'saved'
         })
     });
     

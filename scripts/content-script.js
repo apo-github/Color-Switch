@@ -1,13 +1,28 @@
+// cssをインジェクトする
+
 console.log("content-script");
 
+
+
 // backgroundを最初に呼び出す
-chrome.runtime.sendMessage({ message: "to_background" }, ()=> {
-    console.log("call background.js");
-});
+chrome.runtime.sendMessage({ message: "to_background" }); //ここはOK
 
 // cssをインジェクト
-chrome.runtime.onMessage.addListener((options, func) => {
-    
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
+    const { options, func } = request;
+    // which service to use?
+    results = false;
+    switch (func){
+        case "aws":
+            results = AwsChangeColor(options);
+            break;
+        case "azure":
+            results = AzureChangeColor(options);
+            break;
+        default:
+            results = DefaultChangeColor(options);
+    }
+    sendResponse(results);
 });
 
 
@@ -19,7 +34,8 @@ function DefaultChangeColor(options){
     show_settngs(options);
     
     add_style(options);
-    clearInterval(set_interval_id);
+    return true;
+    // clearInterval(set_interval_id);
 }
 
 function AwsChangeColor(options) {
@@ -35,11 +51,14 @@ function AwsChangeColor(options) {
             console.log("matched AWS ID!");
             add_style(options);
             clearInterval(set_interval_id);
+            return true;
         } else {
             remove_style();
             clearInterval(set_interval_id);
+            return true;
         }
     }
+    return false;
 }
 
 function AzureChangeColor(options) {
@@ -55,19 +74,22 @@ function AzureChangeColor(options) {
             console.log("matched Azure ID!");
             add_style(options);
             clearInterval(set_interval_id);
+            return true;
         } else {
             remove_style();
             clearInterval(set_interval_id);
+            return true;
         }
     }
+    return false;
 }
 
 function show_settngs(options){
-    console.log(options)
     console.log("=== Settings ===");
-    console.log("AWS ID: ", options.id_row);
     console.log("Selector: ", options.query_selector_row);
     console.log("Color: ", options.color_row);
+    console.log("service_row", options.service_row)
+    console.log("AWS ID: ", options.id_row);
     console.log("Tab Id: ", options.tab_id);
     console.log("=================");
 }
