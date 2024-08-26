@@ -61,14 +61,14 @@ function wait_loading(){
 }
 
 function DefaultChangeColor(options){
-    if(document.querySelector(options.query_selector_row) != null) { 
+    if(document.querySelector(options.query_selector_row) != "" && options.id_row == "") { 
         add_style(options);
     }
     wait_loading();
 }
 
 function AwsChangeColor(options) {
-    if(document.querySelector(options.query_selector_row) != null) { 
+    if(document.querySelector(options.query_selector_row) != "") { 
         console.log("user check!");
         user_id = aws_get_user_id()
         

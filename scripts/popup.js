@@ -94,13 +94,14 @@ function setParams(){
     });
 
     //
-    chrome.runtime.sendMessage({ message: "to_content_script" }, (response) => {
+    chrome.runtime.sendMessage({ message: "to_background" }, (response) => {
         if (chrome.runtime.lastError) {
             console.error("content-script.js呼び出し時エラー:", chrome.runtime.lastError.message);
         }else{
             console.log(response.message);
         }
     });
+    
     
 }
 
@@ -111,12 +112,13 @@ function deleteParams(){
 
 
 function deleteBrock(delete_No){
-    document.querySelector(`#url-row-${delete_No}`).remove();
-    document.querySelector(`#css-selector-row-${delete_No}`).remove();
-    document.querySelector(`#color-row-${delete_No}`).remove();
-    document.querySelector(`#service-row-${delete_No}`).remove();
-    document.querySelector(`#id-row-${delete_No}`).remove();
-    document.querySelector(`#delete-row-${delete_No}`).remove();
+    document.querySelectorAll('.row')[delete_No-1].remove();
+    // document.querySelector(`#url-row-${delete_No}`).remove();
+    // document.querySelector(`#css-selector-row-${delete_No}`).remove();
+    // document.querySelector(`#color-row-${delete_No}`).remove();
+    // document.querySelector(`#service-row-${delete_No}`).remove();
+    // document.querySelector(`#id-row-${delete_No}`).remove();
+    // document.querySelector(`#delete-row-${delete_No}`).remove();
     rowNum--;
     // console.log(rowNum)
 }
