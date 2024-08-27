@@ -15,10 +15,7 @@ save_button.addEventListener( "click", () => {
 });
 
 add_button.addEventListener('click', function(){
-    // rowNum = document.querySelectorAll(".row").length;
-    console.log("rownum: ", rowNum);
     rowNum++;
-    console.log("rownum: ", rowNum);
     addBlock(rowNum);
 });
 
@@ -37,8 +34,6 @@ function getParams() {
     chrome.storage.sync.get(null, function (datas) {
         const data_num = Object.keys(datas).length
         const data_length = data_num !== undefined ? data_num/5 : 0;
-        console.log(data_length);
-        console.log(datas);
 
         for (let i = 1; i <= data_length; i++) {
             if (i > 1){
@@ -55,11 +50,9 @@ function getParams() {
         
         // 削除ボタン
         delete_button = document.querySelectorAll('button[id^="delete-row-"]');
-        console.log(delete_button);
         delete_button.forEach(button => {
             button.addEventListener('click', function(event) {
                 const clickedButtonId = event.target.id;
-                console.log(clickedButtonId);
                 const buttonNumber = clickedButtonId.match(/\d+/);
                 isdelete = true;
                 
@@ -71,13 +64,9 @@ function getParams() {
 
 function setParams(){
     chrome.storage.sync.clear();  // 開発用
-    console.log("Popup.js > setParams");
-    console.log("rowNum: ", rowNum);
     let data_obj = {};
 
     for (let i = 1; i <= rowNum; i++){
-        console.log("rowNum", rowNum);
-        console.log("save-num:", i);
         let URL = document.querySelector(`#url-row-${i}`).value;
         let CSS_SELECTOR = document.querySelector(`#css-selector-row-${i}`).value;
         let COLOR = document.querySelector(`#color-row-${i}`).value;
@@ -95,14 +84,7 @@ function setParams(){
         alert("Saved your settings(｀・ω・´)");
     });
 
-    //
-    chrome.runtime.sendMessage({ message: "to_background" }, (response) => {
-        if (chrome.runtime.lastError) {
-            console.error("content-script.js呼び出し時エラー:", chrome.runtime.lastError.message);
-        }else{
-            console.log(response.message);
-        }
-    });
+    chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
     
     
 }
@@ -125,23 +107,14 @@ function updateRowId(){
     document.querySelectorAll('input[id^="url-row-"]').forEach((element, i) => {
         row_number.push({oldNo: element.id.match(/\d+/)[0], newNo: i+1});
     });
-    console.log(row_number);
 
     row_number.forEach(item => {
-        console.log("item: ", item);
-        // console.log(document.querySelector(`#url-row-${item}`).id);
-        // console.log(document.querySelector(`#url-row-${item}`));
-        // console.log(row_number);
-
         document.querySelector(`#url-row-${item.oldNo}`).id = `url-row-${item.newNo}`;
         document.querySelector(`#css-selector-row-${item.oldNo}`).id = `css-selector-row-${item.newNo}`;
         document.querySelector(`#color-row-${item.oldNo}`).id = `color-row-${item.newNo}`;
         document.querySelector(`#service-row-${item.oldNo}`).id = `service-row-${item.newNo}`;
         document.querySelector(`#id-row-${item.oldNo}`).id = `id-row-${item.newNo}`;
         document.querySelector(`#delete-row-${item.oldNo}`).id = `delete-row-${item.newNo}`;
-
-        console.log(document.querySelector(`#url-row-${item.newNo}`).id);
-        console.log("end")
     });
 }
 
