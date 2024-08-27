@@ -9,40 +9,52 @@ let interval_id;
 
 // backgroundを最初に呼び出す
 chrome.runtime.sendMessage({ message: "to_background" }, (response) => {
-    if (chrome.runtime.lastError) {
-        console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
-    }else{
-        console.log(response.message);
-    }
+    // if (chrome.runtime.lastError) {
+    //     console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
+    // }else{
+    //     console.log(response.message);
+    // }
 });
 
 
 // cssをインジェクト
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
     if (request.message === 'to_content_script') { // 特定の関数からのリクエストかどうかをチェック
+        
         const { options, func } = request;
-        show_settngs(options);
 
         // which service to use?
         switch (func){
             case "aws":
                 console.log("=== Aws Page ===\n");
+                show_settngs(options);
                 if (!interval_id){
                     interval_id = setInterval(() => AwsChangeColor(options), 1000);
                 }
                 break;
             case "azure":
                 console.log("=== Azure Page ===\n");
+                show_settngs(options);
                 if (!interval_id){
                     interval_id = setInterval(() => AzureChangeColor(options), 1000);
                 } 
                 break;
+            case "remove":
+                console.log("=== Remove Selector from Page ===\n");
+                if (!interval_id){
+                    interval_id = setInterval(() => remove_style(), 1000);
+                }
+                break;
             default:
                 console.log("=== Dafault Page ===\n"); 
+                show_settngs(options);
                 if (!interval_id){
                     interval_id = setInterval(() => DefaultChangeColor(options), 1000);
                 } 
         }
+    }else if(request.message === "to_content_script"){
+        const element = document.head.lastElementChild;
+        element.remove();
     }
     sendResponse({message: "content-script received the request"});
     return true;

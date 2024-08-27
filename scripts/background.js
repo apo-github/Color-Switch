@@ -22,7 +22,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'to_background') { // 特定の関数からのリクエストかどうかをチェック
         console.log(" ====== background.js! =====")
 
+        let delete_urls;
+        if (request.option != undefined){
+            delete_urls = request.option
+            console.log("=====> ", delete_urls);
+        }
+
         chrome.tabs.query({}, (tabs) => {
+            console.log(tabs)
             if (tabs !== undefined) {
                 // changeColor(tabs); 
                 chrome.storage.sync.get(null, (datas) => {
@@ -33,16 +40,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     
                     for (let t = 0; t < TABS.length; t++) {
                         for (let i = 1; i <= DATA_LENGTH; i++) {
-            
+
                             // 正規表現を生成
                             let pattern = datas[`url_row_${i}`];
                             pattern = pattern.replace('*', '(.*)');
                             let re = new RegExp(pattern); 
-                            // console.log(re)
-            
+                            
                             if (re.test(TABS[t].url)){ // url pattern match?
-                                console.log("=======パターンが一致しました======")
                                 let options = {};
+                                console.log("=======パターンが一致しました======")
                                 options['query_selector_row'] = datas[`query_selector_row_${i}`];
                                 options['color_row'] = datas[`color_row_${i}`];
                                 options['service_row'] = datas[`service_row_${i}`];
@@ -54,34 +60,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                     case "aws":
                                         chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {
                                             console.log("call AwsChangeColor func");
-                                            if (chrome.runtime.lastError) {
-                                                console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
-                                            }else{
-                                                console.log(response.message);
-                                            }
+                                            // if (chrome.runtime.lastError) {
+                                            //     console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
+                                            // }else{
+                                            //     console.log(response.message);
+                                            // }
                                         });
                                         break;
                                     case "azure":
                                         chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}, (response)=> {
                                             console.log("call AzureChangeColor func");
-                                            if (chrome.runtime.lastError) {
-                                                console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
-                                            }else{
-                                                console.log(response.message);
-                                            }
+                                            // if (chrome.runtime.lastError) {
+                                            //     console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
+                                            // }else{
+                                            //     console.log(response.message);
+                                            // }
                                         });
                                         break;
                                     default:
                                         chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {
                                             console.log("call DefaultChangeColor func");
-                                            if (chrome.runtime.lastError) {
-                                                console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
-                                            }else{
-                                                console.log(response.message);
-                                            }
+                                            // if (chrome.runtime.lastError) {
+                                            //     console.error("backgournd.js呼び出し時エラー:", chrome.runtime.lastError.message);
+                                            // }else{
+                                            //     console.log(response.message);
+                                            // }
                                         });
                                 }
                             }
+                        }
+                        // deleteボタンが押された時に背景をもとに戻す処理
+                        if (delete_urls != undefined){
+                            delete_urls.forEach(url => {
+                                pattern = url.replace('*', '(.*)');
+                                let re = new RegExp(pattern);
+                                if (re.test(TABS[t].url)){ // url pattern match?
+                                    chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}, (response)=> {
+                                        console.log("call Remove style");
+                                    });
+                                }
+                            });
                         }
                     }
                 });

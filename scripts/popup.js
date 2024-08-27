@@ -2,11 +2,13 @@ getParams() //初期ロード時の設定読み込み
 const save_button = document.querySelector("#save");
 const add_button = document.querySelector("#plus");
 let isdelete = false;
+let delete_urls = [];
 
 
 save_button.addEventListener( "click", () => {
     if (isdelete) {
-        deleteParams()
+        deleteParams();
+        chrome.runtime.sendMessage({ message: "to_background", option: delete_urls }, (response) => {});
     }
     setParams(rowNum);
     isdelete = false;
@@ -60,7 +62,7 @@ function getParams() {
                 console.log(clickedButtonId);
                 const buttonNumber = clickedButtonId.match(/\d+/);
                 isdelete = true;
-        
+                
                 deleteBrock(buttonNumber);
             });
         });
@@ -112,15 +114,9 @@ function deleteParams(){
 
 
 function deleteBrock(delete_No){
+    delete_urls.push(document.querySelector(`#url-row-${delete_No}`).value); // backgroundにurlsを渡すのに必要
     document.querySelectorAll('.row')[delete_No-1].remove();
-    // document.querySelector(`#url-row-${delete_No}`).remove();
-    // document.querySelector(`#css-selector-row-${delete_No}`).remove();
-    // document.querySelector(`#color-row-${delete_No}`).remove();
-    // document.querySelector(`#service-row-${delete_No}`).remove();
-    // document.querySelector(`#id-row-${delete_No}`).remove();
-    // document.querySelector(`#delete-row-${delete_No}`).remove();
     rowNum--;
-    // console.log(rowNum)
 }
 
 
@@ -160,7 +156,7 @@ function addBlock(rowNumber){
 
     const newRowHTML = `
       <div class="row">
-        <div class="col-5">
+        <div class="col-4">
           <div class="mb-3">
               <input
               class="form-control"
@@ -206,7 +202,14 @@ function addBlock(rowNumber){
                 />
           </div>
         </div>
-        <button class="form-control btn btn-danger" id="${DELETE}"></button>
+        <div class="col-1 p-0 ">
+          <div class="mb-3">
+            <button
+              class="form-control bi bi-trash-fill"
+              id="${DELETE}"
+            ></button>
+          </div>
+        </div>
       </div>
     `;
     
