@@ -32,7 +32,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     
                     for (let t = 0; t < TABS.length; t++) {
                         for (let i = 1; i <= DATA_LENGTH; i++) {
-
                             // 正規表現を生成
                             let pattern = datas[`url_row_${i}`];
                             pattern = pattern.replace('*', '(.*)');
@@ -68,6 +67,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                     chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}, (response)=> {});
                                 }
                             });
+                            delete_urls = undefined;
                         }
                     }
                 });

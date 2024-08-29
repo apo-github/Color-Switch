@@ -69,8 +69,6 @@ function AwsChangeColor(options) {
         
         if (user_id == options.id_row){
             add_style(options);
-        } else { // 色をデフォルトの状態に戻す
-            remove_style();
         }
     }
     wait_loading();
@@ -99,9 +97,10 @@ function show_settngs(options){
 }
 
 function aws_get_user_id(){
-    let user_id = document.querySelector(AWS_USER_NAME_CSS_SELECTOR).getAttribute('aria-label');
-    user_id = user_id.substring(user_id.indexOf("@")+1).replace(/[-]/g,"");
-    user_id = user_id.replace(" ", "");
+    // let user_id = document.querySelector(AWS_USER_NAME_CSS_SELECTOR).getAttribute('aria-label');
+    // user_id = user_id.substring(user_id.indexOf("@")+1).replace(/[-]/g,"");
+    // user_id = user_id.replace(" ", "");
+    let user_id = JSON.parse(document.querySelectorAll("meta")[2].content).accountId;
     return user_id
 }
 
