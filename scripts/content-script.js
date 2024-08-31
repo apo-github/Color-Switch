@@ -57,17 +57,17 @@ function wait_loading(){
 }
 
 function DefaultChangeColor(options){
-    if(document.querySelector(options.query_selector_row) != "" && options.id_row == "") { 
+    if(document.querySelector(options.query_selector_row) !== "" && options.id_row === "") { 
         add_style(options);
     }
     wait_loading();
 }
 
 function AwsChangeColor(options) {
-    if(document.querySelector(options.query_selector_row) != "") { 
-        user_id = aws_get_user_id()
+    if(document.querySelector(options.query_selector_row) !== "") { 
+        const USER_ID = aws_get_user_id()
         
-        if (user_id == options.id_row){
+        if (USER_ID === options.id_row){
             add_style(options);
         }
     }
@@ -76,10 +76,10 @@ function AwsChangeColor(options) {
 
 function AzureChangeColor(options) {
 
-    if(document.querySelector(options.query_selector_row) != null) { 
-        user_id = azure_get_user_id()
+    if(document.querySelector(options.query_selector_row) !== null) { 
+        const USER_ID = azure_get_user_id()
 
-        if (user_id == options.id_row){
+        if (USER_ID === options.id_row){
             add_style(options);
         } else {
             remove_style();
@@ -112,7 +112,13 @@ function azure_get_user_id(){
 }
 
 function add_style(options){
+    const BEFORE_STYLE = document.head.querySelector("#color-change");
+    if (BEFORE_STYLE !== null){
+        BEFORE_STYLE.remove();//要素が残っていた場合は消す
+    }
+
     const style = document.createElement("style");
+    style.id = "color-change"
     style.innerHTML = `
     ${options.query_selector_row} {
         background-color: ${options.color_row}!important;

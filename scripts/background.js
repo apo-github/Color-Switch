@@ -29,32 +29,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     const TABS = tabs
                     const DATA_NUM = Object.keys(datas).length
                     const DATA_LENGTH = DATA_NUM !== undefined ? DATA_NUM/COL_NUM : 0;
-                    
+
                     for (let t = 0; t < TABS.length; t++) {
                         for (let i = 1; i <= DATA_LENGTH; i++) {
                             // 正規表現を生成
-                            let pattern = datas[`url_row_${i}`];
-                            pattern = pattern.replace('*', '(.*)');
-                            let re = new RegExp(pattern); 
-                            
-                            if (re.test(TABS[t].url)){ // url pattern match?
-                                let options = {};
-                                options['query_selector_row'] = datas[`query_selector_row_${i}`];
-                                options['color_row'] = datas[`color_row_${i}`];
-                                options['service_row'] = datas[`service_row_${i}`];
-                                options['id_row'] = datas[`id_row_${i}`];
-                                options['tab_id'] = TABS[t];
-            
-                                // which service to use?
-                                switch (options['service_row']){
-                                    case "aws":
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {});
-                                        break;
-                                    case "azure":
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}, (response)=> {});
-                                        break;
-                                    default:
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {});
+                            let settings_url = datas[`url_row_${i}`];
+
+                            if (settings_url !== "" && settings_url !== undefined){ // not empty and undefined
+                                settings_url = settings_url.replace('*', '(.*)');
+                                let re = new RegExp(settings_url); 
+                                
+                                if (re.test(TABS[t].url)){ // url pattern match?
+                                    let options = {};
+                                    options['query_selector_row'] = datas[`query_selector_row_${i}`];
+                                    options['color_row'] = datas[`color_row_${i}`];
+                                    options['service_row'] = datas[`service_row_${i}`];
+                                    options['id_row'] = datas[`id_row_${i}`];
+                                    options['tab_id'] = TABS[t];
+                
+                                    // which service to use?
+                                    switch (options['service_row']){
+                                        case "aws":
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {});
+                                            break;
+                                        case "azure":
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}, (response)=> {});
+                                            break;
+                                        default:
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {});
+                                    }
                                 }
                             }
                         }
