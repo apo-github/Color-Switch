@@ -1,9 +1,9 @@
 // cssをインジェクトする
 const AWS_USER_NAME_CSS_SELECTOR = "#nav-usernameMenu";
 const AZURE_USER_NAME_CSS_SELECTOR = ".fxs-avatarmenu-username"
-const MAX_TRY_COUNT = 10;
+const MAX_TRY_COUNT = 2000;
 let wait_count = 0;
-let interval_id;
+// let interval_id;
 
 // backgroundを最初に呼び出す
 chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
@@ -18,24 +18,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
         // which service to use?
         switch (func){
             case "aws":
-                if (!interval_id){
-                    interval_id = setInterval(() => AwsChangeColor(options), 1000);
-                }
+                AwsChangeColor(options);
                 break;
             case "azure":
-                if (!interval_id){
-                    interval_id = setInterval(() => AzureChangeColor(options), 1000);
-                } 
+                AzureChangeColor(options);
                 break;
             case "remove":
-                if (!interval_id){
-                    interval_id = setInterval(() => remove_style(), 1000);
-                }
+                remove_style();
                 break;
             default:
-                if (!interval_id){
-                    interval_id = setInterval(() => DefaultChangeColor(options), 1000);
-                } 
+                DefaultChangeColor(options);
+                // if (!interval_id){
+                //     interval_id = setInterval(() => DefaultChangeColor(options), 1000); // setIntervalは動作がよくわからないので使用をやめた。(settingsの1行目以降の値が読まれない)
+                // } 
         }
     }else if(request.message === "to_content_script"){
         const element = document.head.lastElementChild;
@@ -51,8 +46,8 @@ function wait_loading(){
     if (wait_count < MAX_TRY_COUNT){
         wait_count += 1;
     }else{
-        clearInterval(interval_id);
-        interval_id = null;
+        // clearInterval(interval_id);
+        // interval_id = null;
     }
 }
 
@@ -65,9 +60,8 @@ function DefaultChangeColor(options){
 
 function AwsChangeColor(options) {
     if(document.querySelector(options.query_selector_row) !== "") { 
-        const USER_ID = aws_get_user_id()
-        
-        if (USER_ID === options.id_row){
+        let user_id = aws_get_user_id()
+        if (user_id === options.id_row){
             add_style(options);
         }
     }
@@ -97,10 +91,12 @@ function show_settngs(options){
 }
 
 function aws_get_user_id(){
-    // let user_id = document.querySelector(AWS_USER_NAME_CSS_SELECTOR).getAttribute('aria-label');
-    // user_id = user_id.substring(user_id.indexOf("@")+1).replace(/[-]/g,"");
-    // user_id = user_id.replace(" ", "");
-    let user_id = JSON.parse(document.querySelectorAll("meta")[2].content).accountId;
+    let user_id;
+    try {
+        user_id = JSON.parse(document.querySelectorAll("meta")[2].content).accountId;
+    }catch{
+        user_id = ""
+    }
     return user_id
 }
 
@@ -126,16 +122,16 @@ function add_style(options){
     `;
     document.head.appendChild(style);
 
-    // intervalを終える
-    clearInterval(interval_id);
-    interval_id = null;
+    // // intervalを終える
+    // clearInterval(interval_id);
+    // interval_id = null;
 }
 
 function remove_style(){
     const element = document.head.lastElementChild;
     element.remove();
 
-    // intervalを終える
-    clearInterval(interval_id);
-    interval_id = null;
+    // // intervalを終える
+    // clearInterval(interval_id);
+    // interval_id = null;
 }

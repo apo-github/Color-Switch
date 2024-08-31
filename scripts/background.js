@@ -1,18 +1,11 @@
 //すべてのタブ（tabs）のidを取得し、tab id ごとにcontent_scriptを実行する
 const COL_NUM = 5
 
-
 // アクティブなタブを取得 (これで問題があれば全タブを取得し、それぞれのページに適用させるようにする方向で)
 // ストレージから全データを取り出す
 // アクティブタブのURLとストレージに登録された全URLをチェックしマッチするかどうかを判定
 // マッチした場合は、そのURLキーと同じ番号キーをすべて取得
 // そのURLを持つタブ(今回はアクティブtab)に対し、バックグラウンド変更処理をインジェクト
-
-
-// chrome.runtime.onInstalled.addListener(() => {
-//     console.log('拡張機能がインストールまたは更新されました。');
-// });
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     
@@ -66,11 +59,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             delete_urls.forEach(url => {
                                 pattern = url.replace('*', '(.*)');
                                 let re = new RegExp(pattern);
+                                console.log(delete_urls);
+                                console.log(re);
+                                console.log(TABS[t].url);
                                 if (re.test(TABS[t].url)){ // url pattern match?
+                                    console.log(delete_urls);
                                     chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}, (response)=> {});
+                                    delete_urls.shift();
                                 }
                             });
-                            delete_urls = undefined;
+                            
                         }
                     }
                 });
