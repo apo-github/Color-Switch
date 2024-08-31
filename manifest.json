@@ -1,7 +1,7 @@
 {
     "manifest_version": 3, 
     "version": "1.0", 
-    "name": "change the specific page color", 
+    "name": "Color switch", 
     "description": "change the specific page color",
     "permissions":["storage", "tabs"],
     "content_scripts": [
