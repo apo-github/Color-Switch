@@ -4,6 +4,9 @@ const add_button = document.querySelector("#plus");
 let isdelete = false;
 let delete_urls = [];
 
+urlValidate();
+serviceValidate();
+cssValidate();
 
 save_button.addEventListener( "click", () => {
     if (isdelete) {
@@ -17,16 +20,70 @@ save_button.addEventListener( "click", () => {
 add_button.addEventListener('click', function(){
     rowNum++;
     addBlock(rowNum);
+    urlValidate();
+    serviceValidate();
+    cssValidate();
 });
 
-// // ボタンの非活性処理を追加
-// const service_select_btn = document.querySelector("select-service");
-// service_select_btn.addEventListener( "click", () => {
-//     if (service_select_btn.value == "") {
-//         service_select_btn.disabled = true;
-//     }
-// })
+// IDボタンの非活性処理
+function serviceValidate(){
+    const SERVICE_BUTTUNS = document.querySelectorAll('select[id^="service-row-"]');
+    SERVICE_BUTTUNS.forEach(btn => {
+        btn.addEventListener( "click", () => {
+            for(let i=0; i < SERVICE_BUTTUNS.length; i++){
+                if (SERVICE_BUTTUNS[i].value == "none"){
+                    document.querySelector(`#id-row-${i+1}`).disabled = true;
+                }else{
+                    document.querySelector(`#id-row-${i+1}`).disabled = false;
+                }
+            }
+        })
+    })
+}
 
+// URLバリデーション
+function urlValidate(){
+    const URL = document.querySelectorAll('input[id^="url-row-"]');
+    const URL_DIV = document.querySelectorAll('.url-div');
+    URL.forEach(url => {
+        URL_DIV.forEach(url_div => {
+            url.addEventListener('focus', TurnOffValid);
+            function TurnOffValid() {
+                url_div.classList.required = false;
+                url_div.classList.remove('was-validated');
+            }
+            url.addEventListener('blur', validUrl);
+            function validUrl() {
+                if (url.value != "") {
+                    url_div.classList.add('was-validated');
+                    css_div.classList.required = true;
+                }
+            }
+        })
+    });
+}
+
+
+function cssValidate(){
+    const CSS = document.querySelectorAll('input[id^="css-selector-row-"]');
+    const CSS_DIV = document.querySelectorAll('.css-div');
+    CSS.forEach(css => {
+        CSS_DIV.forEach(css_div => {
+            css.addEventListener('focus', TurnOffValid);
+            function TurnOffValid() {
+                css_div.classList.required = false;
+                css_div.classList.remove('was-validated');
+            }
+            css.addEventListener('blur', validCss);
+            function validCss() {
+                if (css.value != "" || css.value.slice[0] != "." || css.value.slice[0] != "#") {
+                    css_div.classList.add('was-validated');
+                    css_div.classList.required = true;
+                }
+            }
+        })
+    });
+}
 
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
@@ -130,20 +187,23 @@ function addBlock(rowNumber){
     const newRowHTML = `
       <div class="row">
         <div class="col-4">
-          <div class="mb-3">
+          <div class="mb-3 url-div">
               <input
+              type="url"
               class="form-control"
               id="${URL}"
               placeholder=""
+              required
               />
           </div>
         </div>
         <div class="col-2 pe-0">
-            <div class="mb-3">
+            <div class="mb-3 css-div">
                 <input
                 class="form-control" 
                 id="${CSS_SELECTOR}"
                 placeholder=""
+                required
                 />
             </div>
         </div>
@@ -172,6 +232,7 @@ function addBlock(rowNumber){
                 class="form-control"
                 id="${ID}"
                 placeholder=""
+                disabled
                 />
           </div>
         </div>

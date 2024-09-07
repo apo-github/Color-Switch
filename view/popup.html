@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AWS Color Change Extension Options</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../bootstrap-5.3.0-dist/css/bootstrap.css" />
     <link
@@ -28,22 +27,25 @@
       <h1 class="h3 mt-5">Settings</h1>
       <div class="row">
         <div class="col-4">
-          <div class="mb-3">
+          <div class="mb-3 url-div">
             <label class="form-label">URL</label>
             <input
+              type="url"
               class="form-control"
               id="url-row-1"
               placeholder="https://*.console.aws.amazon.com/*"
+              required
             />
           </div>
         </div>
         <div class="col-2 pe-0">
-          <div class="mb-3">
+          <div class="mb-3 css-div">
             <label class="form-label">CSS Selector</label>
             <input
               class="form-control"
               id="css-selector-row-1"
               placeholder=".globalNav-123"
+              required
             />
           </div>
         </div>
@@ -78,6 +80,7 @@
               class="form-control"
               id="id-row-1"
               placeholder="012345678901"
+              disabled
             />
           </div>
         </div>
