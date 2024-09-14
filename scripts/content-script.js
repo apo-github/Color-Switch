@@ -69,16 +69,13 @@ function AwsChangeColor(options) {
 }
 
 function AzureChangeColor(options) {
-
-    if(document.querySelector(options.query_selector_row) !== null) { 
-        const USER_ID = azure_get_user_id()
-
-        if (USER_ID === options.id_row){
-            add_style(options);
-        } else {
-            remove_style();
-        }
+    let re = new RegExp(options.id_row);
+    if (re.test(options['tab_id'].url)){
+        add_style(options);
+    }else{
+        remove_style(options);
     }
+    // wait_loading();
 }
 
 function show_settngs(options){
@@ -100,8 +97,8 @@ function aws_get_user_id(){
     return user_id
 }
 
-function azure_get_user_id(){
-    let user_id = document.querySelector(AZURE_USER_NAME_CSS_SELECTOR).textContent;
+function azure_much_subscription_id(){
+    let user_id = options['tab_id'].url
     // user_id = user_id.substring(user_id.indexOf("@")+1).replace(/["]/g,"");
     user_id = user_id.replace(" ", "");
     return user_id
@@ -128,8 +125,10 @@ function add_style(options){
 }
 
 function remove_style(){
-    const element = document.head.lastElementChild;
-    element.remove();
+    const elements = document.querySelectorAll("#color-change");
+    for (let i = 0; i < elements.length; i++) {
+        elements[0].remove();
+    }
 
     // // intervalを終える
     // clearInterval(interval_id);

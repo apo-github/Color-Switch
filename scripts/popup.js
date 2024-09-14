@@ -56,7 +56,7 @@ function urlValidate(){
             function validUrl() {
                 if (url.value != "") {
                     url_div.classList.add('was-validated');
-                    css_div.classList.required = true;
+                    url_div.classList.required = true;
                 }
             }
         })
