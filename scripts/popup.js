@@ -4,9 +4,12 @@ const add_button = document.querySelector("#plus");
 let isdelete = false;
 let delete_urls = [];
 
-urlValidate();
-serviceValidate();
-cssValidate();
+window.addEventListener("load", function() {
+    // 実行したい処理
+    serviceValidate(); //読み込んだ後にもかかわらず、ここで取得しているrowの数が合わない（合ったりもする）。おそらくrowNumがGlobal変数なので、実行タイミングがバラバラなのが原因
+    urlValidate();
+    cssValidate();
+});
 
 save_button.addEventListener( "click", () => {
     if (isdelete) {
@@ -28,6 +31,7 @@ add_button.addEventListener('click', function(){
 // IDボタンの非活性処理
 function serviceValidate(){
     const SERVICE_BUTTUNS = document.querySelectorAll('select[id^="service-row-"]');
+    console.log(SERVICE_BUTTUNS.length)
     SERVICE_BUTTUNS.forEach(btn => {
         btn.addEventListener( "click", () => {
             for(let i=0; i < SERVICE_BUTTUNS.length; i++){
@@ -209,12 +213,7 @@ function addBlock(rowNumber){
         </div>
         <div class="col ps-0">
           <div class="mb-3">
-              <select id="${COLOR}" class="form-select form-select">
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="#CC9900">Gold</option>
-                <option value="crimson">Crimson</option>
-              </select>
+              <input class="form-control form-control-color" type="color" id="${COLOR}" value="#eabc6c" />
           </div>
         </div>
         <div class="col pe-0">
