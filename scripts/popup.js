@@ -4,12 +4,11 @@ const add_button = document.querySelector("#plus");
 let isdelete = false;
 let delete_urls = [];
 
-window.addEventListener("load", function() {
-    // 実行したい処理
-    serviceValidate(); //読み込んだ後にもかかわらず、ここで取得しているrowの数が合わない（合ったりもする）。おそらくrowNumがGlobal変数なので、実行タイミングがバラバラなのが原因
-    urlValidate();
-    cssValidate();
-});
+// 実行したい処理
+serviceValidate(); //読み込んだ後にもかかわらず、ここで取得しているrowの数が合わない（合ったりもする）。おそらくrowNumがGlobal変数なので、実行タイミングがバラバラなのが原因
+urlValidate();
+cssValidate();
+// window.addEventListener("load", function() {});
 
 save_button.addEventListener( "click", () => {
     if (isdelete) {
@@ -216,7 +215,7 @@ function addBlock(rowNumber){
               <input class="form-control form-control-color" type="color" id="${COLOR}" value="#eabc6c" />
           </div>
         </div>
-        <div class="col pe-0">
+        <div class="col-2 pe-0">
           <div class="mb-3">
               <select id="${SERVICE}" class="select-service form-select form-select">
                 <option value="none"></option>

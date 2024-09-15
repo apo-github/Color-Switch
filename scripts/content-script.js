@@ -32,9 +32,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
                 //     interval_id = setInterval(() => DefaultChangeColor(options), 1000); // setIntervalは動作がよくわからないので使用をやめた。(settingsの1行目以降の値が読まれない)
                 // } 
         }
-    }else if(request.message === "to_content_script"){
-        const element = document.head.lastElementChild;
-        element.remove();
     }
     sendResponse({message: "content-script received the request"});
     return true;
