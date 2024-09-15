@@ -3,6 +3,8 @@ const save_button = document.querySelector("#save");
 const add_button = document.querySelector("#plus");
 let isdelete = false;
 let delete_urls = [];
+let last_block_No;
+
 
 // 実行したい処理
 serviceValidate(); //読み込んだ後にもかかわらず、ここで取得しているrowの数が合わない（合ったりもする）。おそらくrowNumがGlobal変数なので、実行タイミングがバラバラなのが原因
@@ -21,7 +23,11 @@ save_button.addEventListener( "click", () => {
 
 add_button.addEventListener('click', function(){
     rowNum++;
-    addBlock(rowNum);
+    last_block_No++;
+    
+    addBlock(last_block_No);
+    document.querySelector(`#delete-row-${last_block_No}`).addEventListener('click', deleteButtonFunc);
+
     urlValidate();
     serviceValidate();
     cssValidate();
@@ -66,6 +72,14 @@ function urlValidate(){
     });
 }
 
+function deleteButtonFunc(event){
+    const clickedButtonId = event.target.id;
+    const buttonNumber = clickedButtonId.match(/\d+/);
+    console.log(clickedButtonId);
+    isdelete = true;
+    deleteBrock(buttonNumber);
+}
+
 
 function cssValidate(){
     const CSS = document.querySelectorAll('input[id^="css-selector-row-"]');
@@ -107,17 +121,12 @@ function getParams() {
         }
 
         window.rowNum = document.querySelectorAll(".row").length; // グローバル変数
+        last_block_No = rowNum;
         
         // 削除ボタン
         delete_button = document.querySelectorAll('button[id^="delete-row-"]');
         delete_button.forEach(button => {
-            button.addEventListener('click', function(event) {
-                const clickedButtonId = event.target.id;
-                const buttonNumber = clickedButtonId.match(/\d+/);
-                isdelete = true;
-                
-                deleteBrock(buttonNumber);
-            });
+            button.addEventListener('click', deleteButtonFunc);
         });
     });
 }
@@ -159,6 +168,10 @@ function deleteBrock(delete_No){
     delete_urls.push(document.querySelector(`#url-row-${delete_No}`).value); // backgroundにurlsを渡すのに必要
     document.querySelectorAll('.row')[delete_No-1].remove();
     rowNum--;
+    
+    if (last_block_No == delete_No){
+        last_block_No = rowNum;
+    }
 }
 
 
