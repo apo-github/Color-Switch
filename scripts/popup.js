@@ -2,6 +2,7 @@ getParams() //初期ロード時の設定読み込み
 const save_button = document.querySelector("#save");
 const add_button = document.querySelector("#plus");
 let isdelete = false;
+let last_block_No;
 
 
 save_button.addEventListener( "click", () => {
@@ -13,11 +14,11 @@ save_button.addEventListener( "click", () => {
 });
 
 add_button.addEventListener('click', function(){
-    // rowNum = document.querySelectorAll(".row").length;
-    console.log("rownum: ", rowNum);
     rowNum++;
-    console.log("rownum: ", rowNum);
-    addBlock(rowNum);
+    last_block_No++;
+    
+    addBlock(last_block_No);
+    document.querySelector(`#delete-row-${last_block_No}`).addEventListener('click', deleteButtonFunc);
 });
 
 // // ボタンの非活性処理を追加
@@ -27,6 +28,14 @@ add_button.addEventListener('click', function(){
 //         service_select_btn.disabled = true;
 //     }
 // })
+
+function deleteButtonFunc(event){
+    const clickedButtonId = event.target.id;
+    const buttonNumber = clickedButtonId.match(/\d+/);
+    console.log(clickedButtonId);
+    isdelete = true;
+    deleteBrock(buttonNumber);
+}
 
 
 function getParams() {
@@ -50,19 +59,13 @@ function getParams() {
         }
 
         window.rowNum = document.querySelectorAll(".row").length; // グローバル変数
+        last_block_No = rowNum;
         
         // 削除ボタン
         delete_button = document.querySelectorAll('button[id^="delete-row-"]');
         console.log(delete_button);
         delete_button.forEach(button => {
-            button.addEventListener('click', function(event) {
-                const clickedButtonId = event.target.id;
-                console.log(clickedButtonId);
-                const buttonNumber = clickedButtonId.match(/\d+/);
-                isdelete = true;
-        
-                deleteBrock(buttonNumber);
-            });
+            button.addEventListener('click', deleteButtonFunc);
         });
     });
 }
@@ -115,7 +118,10 @@ function deleteBrock(delete_No){
     document.querySelector(`#id-row-${delete_No}`).remove();
     document.querySelector(`#delete-row-${delete_No}`).remove();
     rowNum--;
-    // console.log(rowNum)
+
+    if (last_block_No == delete_No){
+        last_block_No = rowNum;
+    }
 }
 
 
