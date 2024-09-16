@@ -3,11 +3,27 @@ const AWS_USER_NAME_CSS_SELECTOR = "#nav-usernameMenu";
 const AZURE_USER_NAME_CSS_SELECTOR = ".fxs-avatarmenu-username"
 const MAX_TRY_COUNT = 2000;
 let wait_count = 0;
-// let interval_id;
+let oldUrl = ''; // URLの記憶用
 
 // backgroundを最初に呼び出す
 chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
 
+// urlの変更検知用（Azureに対応）
+const observer = new MutationObserver(() => {
+    // ここにDOM変更時の処理を書く
+    if(oldUrl !== location.href) {
+        chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
+        console.log('変更を検知');
+        oldUrl = location.href; // oldUrlを更新
+    }
+});
+
+observer.observe(document.body, {
+    subtree: true,
+    childList: true, 
+    attributes: true,
+    characterData: true
+})
 
 // cssをインジェクト
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
@@ -32,6 +48,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
                 //     interval_id = setInterval(() => DefaultChangeColor(options), 1000); // setIntervalは動作がよくわからないので使用をやめた。(settingsの1行目以降の値が読まれない)
                 // } 
         }
+
+        
     }
     sendResponse({message: "content-script received the request"});
     return true;
@@ -114,7 +132,7 @@ function add_style(options){
         background-color: ${options.color_row}!important;
     }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(style);    
 
     // // intervalを終える
     // clearInterval(interval_id);
