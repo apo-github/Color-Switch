@@ -5,13 +5,6 @@ let isdelete = false;
 let delete_urls = [];
 let last_block_No;
 
-
-// 実行したい処理
-serviceValidate(); //読み込んだ後にもかかわらず、ここで取得しているrowの数が合わない（合ったりもする）。おそらくrowNumがGlobal変数なので、実行タイミングがバラバラなのが原因
-urlValidate();
-cssValidate();
-// window.addEventListener("load", function() {});
-
 save_button.addEventListener( "click", () => {
     if (isdelete) {
         deleteParams();
@@ -27,50 +20,15 @@ add_button.addEventListener('click', function(){
     
     addBlock(last_block_No);
     document.querySelector(`#delete-row-${last_block_No}`).addEventListener('click', deleteButtonFunc);
-
-    urlValidate();
-    serviceValidate();
-    cssValidate();
+    document.querySelector(`#service-row-${last_block_No}`).addEventListener("click", selectButtonFunc);
+    document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("focus", cssValidateFunc);
+    document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("blur", cssValidateFunc);
+    document.querySelector(`#url-row-${last_block_No}`).addEventListener("focus", urlValidateFunc);
+    document.querySelector(`#url-row-${last_block_No}`).addEventListener("blur", urlValidateFunc);
+    
 });
 
-// IDボタンの非活性処理
-function serviceValidate(){
-    const SERVICE_BUTTUNS = document.querySelectorAll('select[id^="service-row-"]');
-    console.log(SERVICE_BUTTUNS.length)
-    SERVICE_BUTTUNS.forEach(btn => {
-        btn.addEventListener( "click", () => {
-            for(let i=0; i < SERVICE_BUTTUNS.length; i++){
-                if (SERVICE_BUTTUNS[i].value == "none"){
-                    document.querySelector(`#id-row-${i+1}`).disabled = true;
-                }else{
-                    document.querySelector(`#id-row-${i+1}`).disabled = false;
-                }
-            }
-        })
-    })
-}
 
-// URLバリデーション
-function urlValidate(){
-    const URL = document.querySelectorAll('input[id^="url-row-"]');
-    const URL_DIV = document.querySelectorAll('.url-div');
-    URL.forEach(url => {
-        URL_DIV.forEach(url_div => {
-            url.addEventListener('focus', TurnOffValid);
-            function TurnOffValid() {
-                url_div.classList.required = false;
-                url_div.classList.remove('was-validated');
-            }
-            url.addEventListener('blur', validUrl);
-            function validUrl() {
-                if (url.value != "") {
-                    url_div.classList.add('was-validated');
-                    url_div.classList.required = true;
-                }
-            }
-        })
-    });
-}
 
 function deleteButtonFunc(event){
     const clickedButtonId = event.target.id;
@@ -80,27 +38,62 @@ function deleteButtonFunc(event){
     deleteBrock(buttonNumber);
 }
 
+function selectButtonFunc(event){
+    const elem = event.target
+    const clickedButtonId = elem.id;
+    const buttonNumber = clickedButtonId.match(/\d+/);
 
-function cssValidate(){
-    const CSS = document.querySelectorAll('input[id^="css-selector-row-"]');
-    const CSS_DIV = document.querySelectorAll('.css-div');
-    CSS.forEach(css => {
-        CSS_DIV.forEach(css_div => {
-            css.addEventListener('focus', TurnOffValid);
-            function TurnOffValid() {
-                css_div.classList.required = false;
-                css_div.classList.remove('was-validated');
-            }
-            css.addEventListener('blur', validCss);
-            function validCss() {
-                if (css.value != "" || css.value.slice[0] != "." || css.value.slice[0] != "#") {
-                    css_div.classList.add('was-validated');
-                    css_div.classList.required = true;
-                }
-            }
-        })
-    });
+    if (elem.value == "none"){
+        document.querySelector(`#id-row-${buttonNumber}`).disabled = true;
+    }else{
+        document.querySelector(`#id-row-${buttonNumber}`).disabled = false;
+    }
 }
+
+// バリデーション
+function urlValidateFunc(event){
+    const elem = event.target
+    const elem_parent = elem.closest(".url-div");
+
+    if (event.type == "focus"){
+        elem_parent.classList.remove('was-validated');
+    }else if (event.type == "blur"){
+        if (elem.value != "") {
+            elem_parent.classList.add('was-validated');
+        }
+    }
+}
+
+function isHTMLUnknownElement(tag){
+    try{
+        const elem = document.createElement(tag);
+        return elem instanceof HTMLUnknownElement
+    } catch (error){
+        return true
+    }    
+}
+
+function cssValidateFunc(event){
+    const elem = event.target
+    const elem_value = elem.value
+
+    if (event.type == "focus"){
+        elem.classList.remove("is-invalid")
+        elem.classList.remove("is-valid")
+    }else if(event.type == "blur"){
+        if (elem_value != "") {
+            if (isHTMLUnknownElement(elem_value) && elem_value.indexOf('.') !== 0 && elem_value.indexOf('#') !== 0){
+                elem.classList.add("is-invalid")
+            }else{
+                elem.classList.remove("is-invalid")
+                elem.classList.add("is-valid")
+            }
+        }
+    }
+
+    
+}
+
 
 function getParams() {
     // storage.sync.get()値がなければデフォルト値が採用される
@@ -128,6 +121,27 @@ function getParams() {
         delete_button.forEach(button => {
             button.addEventListener('click', deleteButtonFunc);
         });
+
+        // service バリデーション（ボタン非活性化）
+        select_button = document.querySelectorAll('select[id^="service-row-"]');
+        select_button.forEach(btn => {
+            btn.addEventListener("click", selectButtonFunc);
+        })
+
+        // URL バリデーション
+        url_button = document.querySelectorAll('input[id^="url-row-"]');
+        url_button.forEach(btn => {
+            btn.addEventListener("focus", urlValidateFunc);
+            btn.addEventListener('blur', urlValidateFunc);
+        })
+
+        // CSS Selectorバリデーション
+        css_selector_button = document.querySelectorAll('input[id^="css-selector-row-"]');
+        css_selector_button.forEach(btn => {
+            btn.addEventListener("focus", cssValidateFunc);
+            btn.addEventListener('blur', cssValidateFunc);
+        })
+
     });
 }
 
