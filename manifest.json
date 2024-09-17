@@ -3,6 +3,8 @@
     "version": "0.9.1", 
     "name": "Color switch", 
     "description": "Change the web page color.",
+    "homepage_url": "https://github.com/apo-github/Color-Switch",
+    "support_url": "https://github.com/apo-github/Color-Switch/issues",
     "permissions":["storage", "tabs"],
     "content_scripts": [
         {
