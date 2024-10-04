@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Switch Description</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Adding soft black shadow around the image */
+      .shadowed-img {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Styling footer */
+      footer {
+        bottom: 0;
+        width: 100%;
+        background-color: #f8f9fa;
+        padding: 10px 0;
+        text-align: center;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Color Switch Description</h1>
+
+      <p class="lead">Color Switchの説明</p>
+
+      <!-- Insert Image -->
+      <div class="text-center mb-4">
+        <img
+          src="../images/info_page1.png"
+          alt="Extension Settings"
+          class="img-fluid shadowed-img"
+        />
+      </div>
+
+      <!-- URL Section -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>URL</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong>In the URL</strong>field, specify the URL of the web page
+            for which you want to change the color. You can also use regular
+            expressions.
+          </p>
+          <p>
+            <strong>URL</strong>
+            には、色を変更したいウェブページのURLを指定します。正規表現が使えます。
+          </p>
+          <div class="alert alert-info" role="alert">
+            <p>
+              Example1 (例): 　<code>https://en.wikipedia.org/wiki/Test</code>
+            </p>
+            <p>
+              Example2 (例):
+              　<code>https://en.wikipedia.org/wiki/*</code>　←'*' for all wiki
+              pages
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSS Selector Section -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>CSS Selector</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            The <strong>CSS Selector</strong> field specifies a CSS selector.
+            This allows you to change the background of the page as well as the
+            color of certain parts of the page.
+          </p>
+          <p>
+            <strong>CSSセレクタ</strong>
+            には、CSSセレクタを指定します。これによりページの背景の他、特定の部分だけ色を変えることができます。
+          </p>
+          <div class="alert alert-info" role="alert">
+            <p>Example1 (例): 　<code>body</code>　← changes background</p>
+            <p>
+              Example2 (例): 　<code>.mw-header</code>　← changes header of wiki
+              pages
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Section -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Color</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            In the <strong>Color</strong> field, you can specify a color. Click
+            to select a color.
+          </p>
+          <p>
+            <strong>Color</strong>
+            フィールドでは色を指定できます。クリックによりカラーを選択できます。
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Service and ID</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            The <strong>Service and ID</strong> field are configured for AWS and Azure users; AWS users can specify an account ID and Azure users can specify a subscription ID.
+          </p>
+          <p>
+            <strong>ServiceおよびID</strong>
+            フィールドは、AWSおよびAzure使用者のために設定されています。AWSであればアカウントID、AzureであればサブスクリプションIDを指定できます。
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions Section -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>Actions</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            You can add a new rule by clicking the plus icon
+            (<strong>+</strong>). You can delete an existing rule with the trash
+            can icon (<strong>🗑</strong>).
+          </p>
+          <p>
+            プラスアイコン (<strong>+</strong>)
+            をクリックして新しいルールを追加できます。ゴミ箱アイコン
+            (<strong>🗑</strong>) で既存のルールを削除できます。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer with Copyright -->
+    <footer class="mt-5">
+      &copy; Chrome Extension by fudy-apo
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

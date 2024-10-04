@@ -10,7 +10,7 @@
     <style type="text/css">
       body {
         width: 800px;
-        min-height: 300px;
+        min-height: 330px;
       }
       .container {
         max-width: 750px;
@@ -20,11 +20,22 @@
         border-style: none;
         margin: 0;
       }
+      .bi-question-circle-fill {
+        color: rgb(170, 182, 189);
+        background-color: white;
+        border-style: none;
+        margin: 0;
+        font-size: 1.5em;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1 class="h3 mt-5">Settings</h1>
+      <div class="d-flex justify-content-between">
+        <h1 class="h3 mt-5 pb-3">Settings</h1>
+        <button id="info-icon" class="btn btn-outline bi bi-question-circle-fill mt-2 mr-0 pr-0 pt-4 "></button>
+      </div>
+
       <div class="row">
         <div class="col-4">
           <div class="mb-3 url-div">
@@ -52,12 +63,17 @@
         <div class="col ps-0">
           <div class="mb-3">
             <label class="form-label">Color</label>
-            <input class="form-control form-control-color" type="color" id="color-row-1" value="#eabc6c" />
+            <input
+              class="form-control form-control-color"
+              type="color"
+              id="color-row-1"
+              value="#eabc6c"
+            />
           </div>
         </div>
         <div class="col-2 pe-0">
           <div class="mb-3">
-            <label class="form-label">service</label>
+            <label class="form-label">Service</label>
             <select
               id="service-row-1"
               class="select-service form-select form-select"

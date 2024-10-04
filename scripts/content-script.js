@@ -13,7 +13,6 @@ const observer = new MutationObserver(() => {
     // ここにDOM変更時の処理を書く
     if(oldUrl !== location.href) {
         chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
-        console.log('変更を検知');
         oldUrl = location.href; // oldUrlを更新
     }
 });

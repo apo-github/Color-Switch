@@ -1,6 +1,7 @@
 getParams() //初期ロード時の設定読み込み
 const save_button = document.querySelector("#save");
 const add_button = document.querySelector("#plus");
+const info_icon = document.querySelector("#info-icon")
 let isdelete = false;
 let delete_urls = [];
 let last_block_No;
@@ -28,6 +29,9 @@ add_button.addEventListener('click', function(){
     
 });
 
+info_icon.addEventListener('click', function(){
+    chrome.tabs.create({"url": "./view/info.html" });
+})
 
 
 function deleteButtonFunc(event){

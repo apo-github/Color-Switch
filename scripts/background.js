@@ -39,13 +39,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 // which service to use?
                                 switch (options['service_row']){
                                     case "aws":
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {});
+                                        if (chrome.runtime.lastError) {
+                                            console.error("メッセージ送信エラー:", chrome.runtime.lastError);
+                                        } else {
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {});
+                                            console.log("メッセージ送信成功。");
+                                        }
                                         break;
                                     case "azure":
                                         chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}, (response)=> {});
                                         break;
                                     default:
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {});
+                                        if (chrome.runtime.lastError) {
+                                            console.error("メッセージ送信エラー:", chrome.runtime.lastError);
+                                        } else {
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {});
+                                            console.log("メッセージ送信成功。");
+                                        }
                                 }
                             }
                         }
@@ -67,10 +77,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }
                 }
             });
+            sendResponse({message: "background received the request"});
         });
     }
 
-    sendResponse({message: "background received the request"});
     return true;
 });
 
