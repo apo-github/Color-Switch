@@ -35,7 +35,8 @@ info_icon.addEventListener('click', function(){
 
 
 function deleteButtonFunc(event){
-    const clickedButtonId = event.target.id;
+    const clickedButtonId = event.currentTarget.id;
+    // const clickedButtonId = event.target.id;
     const buttonNumber = clickedButtonId.match(/\d+/);
     console.log(clickedButtonId);
     isdelete = true;
@@ -183,6 +184,7 @@ function deleteParams(){
 
 
 function deleteBrock(delete_No){
+    console.log(delete_No)
     delete_urls.push(document.querySelector(`#url-row-${delete_No}`).value); // backgroundにurlsを渡すのに必要
     document.querySelectorAll('.row')[delete_No-1].remove();
     rowNum--;
@@ -266,11 +268,19 @@ function addBlock(rowNumber){
           </div>
         </div>
         <div class="col-1 p-0 ">
-          <div class="mb-3">
-            <button
-              class="form-control bi bi-trash-fill"
-              id="${DELETE}"
-            ></button>
+          <button class="form-control bi bi-trash-fill" id="${DELETE}">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
