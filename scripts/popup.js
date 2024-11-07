@@ -75,7 +75,7 @@ function isHTMLUnknownElement(tag){
         return elem instanceof HTMLUnknownElement
     } catch (error){
         return true
-    }    
+    }
 }
 
 function cssValidateFunc(event){

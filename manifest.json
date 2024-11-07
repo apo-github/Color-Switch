@@ -1,8 +1,8 @@
 {
     "manifest_version": 3, 
-    "version": "0.9.4", 
-    "name": "Color switch", 
-    "description": "Change the web page color.",
+    "version": "0.9.5", 
+    "name": "Color Changer | Websites Color Editor", 
+    "description": "You can change any part's color, such as buttons, header or background.",
     "permissions":["storage", "tabs"],
     "content_scripts": [
         {
