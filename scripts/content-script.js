@@ -119,13 +119,13 @@ function azure_much_subscription_id(){
 }
 
 function add_style(options){
-    const BEFORE_STYLE = document.head.querySelector("#color-change");
+    const BEFORE_STYLE = document.head.querySelector(`#color-change-${options.query_selector_row}`);
     if (BEFORE_STYLE !== null){
         BEFORE_STYLE.remove();//要素が残っていた場合は消す
     }
 
     const style = document.createElement("style");
-    style.id = "color-change"
+    style.id = `color-change-${options.query_selector_row}`
     style.innerHTML = `
     ${options.query_selector_row} {
         background-color: ${options.color_row}!important;
