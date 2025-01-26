@@ -2,6 +2,8 @@ getParams() //初期ロード時の設定読み込み
 const save_button = document.querySelector("#save");
 const add_button = document.querySelector("#plus");
 const info_icon = document.querySelector("#info-icon")
+const settings_icon = document.querySelector("#info-icon")
+const max_row = 20 // 最大登録行数 20
 let isdelete = false;
 let delete_urls = [];
 let last_block_No;
@@ -18,15 +20,17 @@ save_button.addEventListener( "click", () => {
 add_button.addEventListener('click', function(){
     rowNum++;
     last_block_No++;
-    
-    addBlock(last_block_No);
-    document.querySelector(`#delete-row-${last_block_No}`).addEventListener('click', deleteButtonFunc);
-    document.querySelector(`#service-row-${last_block_No}`).addEventListener("click", selectButtonFunc);
-    document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("focus", cssValidateFunc);
-    document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("blur", cssValidateFunc);
-    document.querySelector(`#url-row-${last_block_No}`).addEventListener("focus", urlValidateFunc);
-    document.querySelector(`#url-row-${last_block_No}`).addEventListener("blur", urlValidateFunc);
-    
+    if(rowNum <= max_row){
+        addBlock(last_block_No);
+        document.querySelector(`#delete-row-${last_block_No}`).addEventListener('click', deleteButtonFunc);
+        document.querySelector(`#service-row-${last_block_No}`).addEventListener("click", selectButtonFunc);
+        document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("focus", cssValidateFunc);
+        document.querySelector(`#css-selector-row-${last_block_No}`).addEventListener("blur", cssValidateFunc);
+        document.querySelector(`#url-row-${last_block_No}`).addEventListener("focus", urlValidateFunc);
+        document.querySelector(`#url-row-${last_block_No}`).addEventListener("blur", urlValidateFunc);
+    }else{
+        console.log(`${max_row}行以上は登録できません`)
+    }
 });
 
 info_icon.addEventListener('click', function(){
