@@ -28,11 +28,11 @@ function convert_json(datas){
   const parent_obj = {}
   for (let i = 1; i <= data_length; i++) {
     child_obj = { 
-      [`#url-row-${i}`] : datas[`url_row_${i}`],
-      [`#css-selector-row-${i}`]:datas[`query_selector_row_${i}`],
-      [`#color-row-${i}`]:datas[`color_row_${i}`],
-      [`#service-row-${i}`]:datas[`service_row_${i}`], 
-      [`#id-row-${i}`]:datas[`id_row_${i}`]
+      [`url-row-${i}`] : datas[`url_row_${i}`],
+      [`css-selector-row-${i}`] : datas[`query_selector_row_${i}`],
+      [`color-row-${i}`] : datas[`color_row_${i}`],
+      [`service-row-${i}`] : datas[`service_row_${i}`], 
+      [`id-row-${i}`] : datas[`id_row_${i}`]
     }
     console.log(child_obj)
     parent_obj[`row${i}`] = child_obj
