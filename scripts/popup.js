@@ -104,10 +104,10 @@ function cssValidateFunc(event){
 }
 
 
-function getParams() {
+function getParams() { 
     // storage.sync.get()値がなければデフォルト値が採用される
     // chrome.storage.sync.clear();  // 開発用
-    chrome.storage.sync.get(null, function (datas) {
+    chrome.storage.sync.get(null, function (datas) {//storageから値をすべて取得。コールバック関数で取得した値をpopupに表示。
         const data_num = Object.keys(datas).length
         const data_length = data_num !== undefined ? data_num/5 : 0;
 
@@ -293,6 +293,4 @@ function addBlock(rowNumber){
     const plusButton = document.querySelector("#plus");
     plusButton.insertAdjacentHTML('beforebegin', newRowHTML);
 }
-
-
 
