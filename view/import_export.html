@@ -66,8 +66,9 @@
           <button id="export">データをエクスポート</button>
 
           <!-- インポートボタン -->
-          <input type="file" id="importFile" style="display: none;" />
-          <button id="import">データをインポート</button>
+          <input type="file" id="file-chooser" accept=".json"/>
+          <button class="import" id="change-all">change all</button>
+          <button class="import" id="change-diff">change diff</button>
           
           <!-- ステータスメッセージ -->
           <p id="status"></p>

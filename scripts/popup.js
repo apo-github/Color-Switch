@@ -116,7 +116,7 @@ function getParams() {
                 addBlock(i);
             }
             document.querySelector(`#url-row-${i}`).value = datas[`url_row_${i}`];
-            document.querySelector(`#css-selector-row-${i}`).value = datas[`query_selector_row_${i}`];
+            document.querySelector(`#css-selector-row-${i}`).value = datas[`css_selector_row_${i}`];
             document.querySelector(`#color-row-${i}`).value = datas[`color_row_${i}`];
             document.querySelector(`#service-row-${i}`).value = datas[`service_row_${i}`];
             document.querySelector(`#id-row-${i}`).value = datas[`id_row_${i}`];        
@@ -152,6 +152,7 @@ function getParams() {
         })
 
     });
+    console.log(chrome.storage.sync.get(null))
 }
 
 function setParams(){
@@ -166,7 +167,7 @@ function setParams(){
         let ID = document.querySelector(`#id-row-${i}`).value;
 
         data_obj[`url_row_${i}`] = URL;
-        data_obj[`query_selector_row_${i}`] = CSS_SELECTOR;
+        data_obj[`css_selector_row_${i}`] = CSS_SELECTOR;
         data_obj[`color_row_${i}`] = COLOR;
         data_obj[`service_row_${i}`] = SERVICE;
         data_obj[`id_row_${i}`] = ID; 
@@ -177,8 +178,6 @@ function setParams(){
     });
 
     chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
-    
-    
 }
 
 function deleteParams(){

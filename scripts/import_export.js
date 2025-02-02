@@ -1,4 +1,4 @@
-//インポート・エクスポート
+//エクスポート
 document.querySelector("#export").addEventListener("click", async () => {
     console.log("押されました")
     try {
@@ -28,14 +28,63 @@ function convert_json(datas){
   const parent_obj = {}
   for (let i = 1; i <= data_length; i++) {
     child_obj = { 
-      [`url-row-${i}`] : datas[`url_row_${i}`],
-      [`css-selector-row-${i}`] : datas[`query_selector_row_${i}`],
-      [`color-row-${i}`] : datas[`color_row_${i}`],
-      [`service-row-${i}`] : datas[`service_row_${i}`], 
-      [`id-row-${i}`] : datas[`id_row_${i}`]
+      [`url_row_${i}`] : datas[`url_row_${i}`],
+      [`css_selector_row_${i}`] : datas[`css_selector_row_${i}`],
+      [`color_row_${i}`] : datas[`color_row_${i}`],
+      [`service_row_${i}`] : datas[`service_row_${i}`], 
+      [`id_row_${i}`] : datas[`id_row_${i}`]
     }
     console.log(child_obj)
     parent_obj[`row${i}`] = child_obj
   }
   return parent_obj
+}
+
+// インポート処理
+document.querySelector("#change-all").addEventListener('click', commonFunc);
+document.querySelector("#change-diff").addEventListener('click', commonFunc);
+//インポート用共通関数
+function commonFunc(e){
+  const import_type = e.target.id
+  console.log(e.target.id)
+  const file = document.querySelector("#file-chooser").files[0];
+  // ファイルチェック
+  if (!file) return;
+  if (!file.name.endsWith(".json")) {
+    alert("JSONファイルのみアップロードできます。");
+    document.querySelector("#file-chooser").value = ""; // 選択をリセット
+    return;
+  }
+  //アップロード処理
+  try {
+    file.text().then(text => { //fileからテキストを取得
+      const data = JSON.parse(text); 
+      let data_length = Object.keys(data).length
+      if(import_type === "change-all"){
+        setAllParams(data, data_length); // ストレージに保存
+      } else if(import_type === "change-diff"){
+        setDiffParams(data, data_length) // ストレージに保存
+      }else{
+        document.getElementById("status").textContent = "インポート中にエラーが発生しました。";
+      }
+      document.getElementById("status").textContent = "データをインポートしました。";
+    }); 
+  } catch (error) {
+    console.error(error);
+    document.getElementById("status").textContent = "インポート中にエラーが発生しました。";
+  }
+}
+
+function setAllParams(data, data_length){
+    chrome.storage.sync.clear(); //clear data
+    for (let i = 1; i <= data_length; i++){
+      chrome.storage.sync.set(data[`row${i}`])
+    }
+}
+
+function setDiffParams(data, data_length){
+  chrome.storage.sync.clear(); //clear data
+  for (let i = 1; i <= data_length; i++){
+    chrome.storage.sync.set(data[`row${i}`])
+  }
 }
