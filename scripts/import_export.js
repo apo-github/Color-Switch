@@ -1,3 +1,10 @@
+// メッセージ
+const SUCCESSED_IMP_MSG = "Success!\nデータをインポートしました。"
+const SUCCESSED_EXP_MSG = "Success!\nデータをエクスポートしました。"
+const ERROR_IMP_MSG = "An error occurred during import.\nインポート中にエラーが発生しました。" 
+const ERROR_EXP_MSG = "An error occurred during export.\nエクスポート中にエラーが発生しました。"  
+const FORMAT_ALERT_MSG = "Only JSON files are available.\nJSONファイルのみアップロードできます。"
+
 //エクスポート
 document.querySelector("#export").addEventListener("click", async () => {
     try {
@@ -13,10 +20,10 @@ document.querySelector("#export").addEventListener("click", async () => {
       a.click();
   
       URL.revokeObjectURL(url); // メモリ解放
-      document.querySelector("#status").textContent = "データをエクスポートしました。";
+      alert(SUCCESSED_EXP_MSG);
     } catch (error) {
       console.error(error);
-      document.querySelector("#status").textContent = "エクスポート中にエラーが発生しました。";
+      alert(ERROR_EXP_MSG);
     }
 });
 
@@ -47,79 +54,74 @@ function commonFunc(e){
   // ファイルチェック
   if (!file) return;
   if (!file.name.endsWith(".json")) {
-    alert("JSONファイルのみアップロードできます。");
+    alert(FORMAT_ALERT_MSG);
     document.querySelector("#file-chooser").value = ""; // 選択をリセット
     return;
   }
   //アップロード処理
-  try {
-    file.text().then(text => { //fileからテキストを取得
-      const datas = JSON.parse(text); 
-      let data_length = Object.keys(datas).length
-      if(import_type === "change-all"){
-        setAllParams(datas, data_length); // ストレージに保存
-      } else if(import_type === "change-diff"){
-        // datas_name = sortDatas() //ソート
-        // TODO datas_name = ["row1", "row2"]をsetParamsに追加で渡す
-        setDiffParams(datas, data_length) // ストレージに保存
-      }else{
-        document.getElementById("status").textContent = "インポート中にエラーが発生しました。";
-      }
-      document.getElementById("status").textContent = "データをインポートしました。";
-    }); 
-  } catch (error) {
-    console.error(error);
-    document.getElementById("status").textContent = "インポート中にエラーが発生しました。";
-  }
+  file.text().then(text => { //fileからテキストを取得
+    const datas = JSON.parse(text); 
+    const data_length = Object.keys(datas).length
+    const sort_name_array = sortDatas(datas) //ソート
+    if(import_type === "change-all"){
+      setAllParams(datas, sort_name_array, data_length); // ストレージに保存
+    } else if(import_type === "change-diff"){
+      setDiffParams(datas, sort_name_array, data_length) // ストレージに保存
+    }else{
+      alert(ERROR_IMP_MSG);
+    }
+    alert(SUCCESSED_IMP_MSG);
+  }).catch(e => {
+    let error_msg = ERROR_IMP_MSG
+    if(e instanceof SyntaxError){
+      error_msg = "JSONの形式が誤っています。"
+    }
+    alert(error_msg)
+  })
 }
 
-function sortDatas(){ //ソートされたKeyの配列を返す関数
-  // const json_datas = JSON.parse(text);
-  // let name_array = Object.keys(json_datas)
-  // name_array = name_array.sort((a, b) => {
-  //   return Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]);
-  // });
-  // console.log(name_array)
-  // let datas = {}
-  // name_array.forEach((key, value) => {
-  //   datas[`${key}`] = 
-  // })
+function sortDatas(datas){ //ソートされたKeyの配列を返す関数
+  let sort_name_array = Object.keys(datas).sort((a, b) => {
+    return Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]);
+  });
+  return sort_name_array
 }
 
-function setAllParams(datas, data_length){
+function setAllParams(datas, sort_name_array, data_length){
     chrome.storage.sync.clear(); //clear data
     for (let i = 1; i <= data_length; i++){
       //番号を1から振りなおす処理
-      let data = Object.values(datas)[i-1]
-      let row_num = Number(Object.keys(datas)[i-1].split("row")[1])
-      let keys = Object.keys(data)
-      child_obj = {} 
-      child_obj[`url_row_${i}`] = data[`row${row_num}`][keys[0]]
-      child_obj[`css_selector_row_${i}`] = data[`row${row_num}`][keys[1]]
-      child_obj[`color_row_${i}`] = data[`row${row_num}`][keys[2]]
-      child_obj[`service_row_${i}`] = data[`row${row_num}`][keys[3]]
-      child_obj[`id_row_${i}`] = data[`row${row_num}`][keys[4]]
+      let row_num = Number(sort_name_array[i-1].split("row")[1])
+      let keys = Object.keys(datas[`row${row_num}`])
+      child_obj = {}
+      child_obj[`url_row_${i}`] = datas[`row${row_num}`][keys[0]]
+      child_obj[`css_selector_row_${i}`] = datas[`row${row_num}`][keys[1]]
+      child_obj[`color_row_${i}`] = datas[`row${row_num}`][keys[2]]
+      child_obj[`service_row_${i}`] = datas[`row${row_num}`][keys[3]]
+      child_obj[`id_row_${i}`] = datas[`row${row_num}`][keys[4]]
       //storageにセットする処理
+      console.log("child_obj")
+      console.log(child_obj)
       chrome.storage.sync.set(child_obj)
     }
 }
 
-function setDiffParams(datas, data_length){
+function setDiffParams(datas, sort_name_array, data_length){
   //storage info
   chrome.storage.sync.get(null).then(stg_datas => {
     const stg_data_num = Object.keys(stg_datas).length
     let stg_data_length = stg_data_num !== undefined ? stg_data_num/5 : 0;
     //import diff datas
     for (let i = 1; i <= data_length; i++){
-      let row_num = Number(Object.keys(datas)[i-1].split("row")[1]) //get json key
+      let row_num = Number(sort_name_array[i-1].split("row")[1]) //get json key
       if(row_num > stg_data_length){ //if row number expand storage data length, import data is added the last row
+        stg_data_length += 1
         //change all key number
         let child_obj = changeKey(stg_data_length, row_num, datas)
         //add it to last row.
         chrome.storage.sync.set(child_obj)
-        stg_data_length += 1
       }else if(row_num <= stg_data_length){
-        let child_obj = changeKey(i, row_num, datas)
+        let child_obj = changeKey(row_num, row_num, datas)
         chrome.storage.sync.set(child_obj) //if storage has the same row number, import data is overrided.
       }else{
         console.log("データ形式が誤っている可能性があります")
