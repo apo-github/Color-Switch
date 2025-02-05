@@ -25,7 +25,7 @@ function convert_json(datas){
   const data_length = data_num !== undefined ? data_num/5 : 0;
   const parent_obj = {}
   for (let i = 1; i <= data_length; i++) {
-    child_obj = { 
+    child_obj = {
       [`url_row_${i}`] : datas[`url_row_${i}`],
       [`css_selector_row_${i}`] : datas[`css_selector_row_${i}`],
       [`color_row_${i}`] : datas[`color_row_${i}`],
@@ -59,6 +59,8 @@ function commonFunc(e){
       if(import_type === "change-all"){
         setAllParams(datas, data_length); // ストレージに保存
       } else if(import_type === "change-diff"){
+        // datas_name = sortDatas() //ソート
+        // TODO datas_name = ["row1", "row2"]をsetParamsに追加で渡す
         setDiffParams(datas, data_length) // ストレージに保存
       }else{
         document.getElementById("status").textContent = "インポート中にエラーが発生しました。";
@@ -71,10 +73,34 @@ function commonFunc(e){
   }
 }
 
+function sortDatas(){ //ソートされたKeyの配列を返す関数
+  // const json_datas = JSON.parse(text);
+  // let name_array = Object.keys(json_datas)
+  // name_array = name_array.sort((a, b) => {
+  //   return Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]);
+  // });
+  // console.log(name_array)
+  // let datas = {}
+  // name_array.forEach((key, value) => {
+  //   datas[`${key}`] = 
+  // })
+}
+
 function setAllParams(datas, data_length){
     chrome.storage.sync.clear(); //clear data
     for (let i = 1; i <= data_length; i++){
-      chrome.storage.sync.set(datas[`row${i}`])
+      //番号を1から振りなおす処理
+      let data = Object.values(datas)[i-1]
+      let row_num = Number(Object.keys(datas)[i-1].split("row")[1])
+      let keys = Object.keys(data)
+      child_obj = {} 
+      child_obj[`url_row_${i}`] = data[`row${row_num}`][keys[0]]
+      child_obj[`css_selector_row_${i}`] = data[`row${row_num}`][keys[1]]
+      child_obj[`color_row_${i}`] = data[`row${row_num}`][keys[2]]
+      child_obj[`service_row_${i}`] = data[`row${row_num}`][keys[3]]
+      child_obj[`id_row_${i}`] = data[`row${row_num}`][keys[4]]
+      //storageにセットする処理
+      chrome.storage.sync.set(child_obj)
     }
 }
 
@@ -82,17 +108,19 @@ function setDiffParams(datas, data_length){
   //storage info
   chrome.storage.sync.get(null).then(stg_datas => {
     const stg_data_num = Object.keys(stg_datas).length
-    const stg_data_length = stg_data_num !== undefined ? stg_data_num/5 : 0;
+    let stg_data_length = stg_data_num !== undefined ? stg_data_num/5 : 0;
     //import diff datas
     for (let i = 1; i <= data_length; i++){
-      let row_num = Number(Object.keys(datas)[i-1].split("row")[1])
+      let row_num = Number(Object.keys(datas)[i-1].split("row")[1]) //get json key
       if(row_num > stg_data_length){ //if row number expand storage data length, import data is added the last row
         //change all key number
-        datas = changeKey(datas, data_length, stg_data_length)
+        let child_obj = changeKey(stg_data_length, row_num, datas)
         //add it to last row.
-        chrome.storage.sync.set(datas[`row${i}`])
-      }else if(Number(row_num) <= stg_data_length){
-        chrome.storage.sync.set(datas[`row${i}`]) //if storage has the same row number, import data is overrided.
+        chrome.storage.sync.set(child_obj)
+        stg_data_length += 1
+      }else if(row_num <= stg_data_length){
+        let child_obj = changeKey(i, row_num, datas)
+        chrome.storage.sync.set(child_obj) //if storage has the same row number, import data is overrided.
       }else{
         console.log("データ形式が誤っている可能性があります")
       }
@@ -100,23 +128,15 @@ function setDiffParams(datas, data_length){
   });
 }
 
-function changeKey(datas, data_length, stg_data_length){
-  let parent_obj = {}
-  for (let i = 1; i <= data_length; i++){
-    let row_num = Number(Object.keys(datas)[i-1].split("row")[1])
-    //add overflow data to last row
-    if(row_num > stg_data_length){
-      child_obj = { 
-        [`url_row_${i}`] : datas[`row${row_num}`][`url_row_${row_num}`],
-        [`css_selector_row_${i}`] : datas[`row${row_num}`][`css_selector_row_${row_num}`],
-        [`color_row_${i}`] : datas[`row${row_num}`][`color_row_${row_num}`],
-        [`service_row_${i}`] : datas[`row${row_num}`][`service_row_${row_num}`], 
-        [`id_row_${i}`] : datas[`row${row_num}`][`id_row_${row_num}`]
-      }
-      parent_obj[`row${i}`] = child_obj
-    }else{
-      parent_obj[`row${i}`] = Object.values(datas)[i-1]
-    }
-  }
-  return parent_obj
+function changeKey(i, row_num, datas){
+  //add overflow data to last row
+  let keys = Object.keys(datas[`row${row_num}`])
+  child_obj = { 
+    [`url_row_${i}`] : datas[`row${row_num}`][keys[0]],
+    [`css_selector_row_${i}`] : datas[`row${row_num}`][keys[1]],
+    [`color_row_${i}`] : datas[`row${row_num}`][keys[2]],
+    [`service_row_${i}`] : datas[`row${row_num}`][keys[3]], 
+    [`id_row_${i}`] : datas[`row${row_num}`][keys[4]]
+  } 
+  return child_obj
 }
