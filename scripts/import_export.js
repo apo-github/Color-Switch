@@ -4,6 +4,7 @@ const SUCCESSED_EXP_MSG = "Success!\nデータをエクスポートしました�
 const ERROR_IMP_MSG = "An error occurred during import.\nインポート中にエラーが発生しました。" 
 const ERROR_EXP_MSG = "An error occurred during export.\nエクスポート中にエラーが発生しました。"  
 const FORMAT_ALERT_MSG = "Only JSON files are available.\nJSONファイルのみアップロードできます。"
+const FILE_ERROR_MSG = "JSON format may be incorrect.\nJSONの形式が誤っている可能性があります。"
 
 //エクスポート
 document.querySelector("#export").addEventListener("click", async () => {
@@ -74,7 +75,7 @@ function commonFunc(e){
   }).catch(e => {
     let error_msg = ERROR_IMP_MSG
     if(e instanceof SyntaxError){
-      error_msg = "JSONの形式が誤っています。"
+      error_msg = FILE_ERROR_MSG
     }
     alert(error_msg)
   })
@@ -124,7 +125,7 @@ function setDiffParams(datas, sort_name_array, data_length){
         let child_obj = changeKey(row_num, row_num, datas)
         chrome.storage.sync.set(child_obj) //if storage has the same row number, import data is overrided.
       }else{
-        console.log("データ形式が誤っている可能性があります")
+        alert(ERROR_IMP_MSG)
       }
     }
   });
