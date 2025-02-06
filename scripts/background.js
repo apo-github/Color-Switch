@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             delete_urls = request.option
         }
 
-        chrome.tabs.query({}, (tabs) => {
-            chrome.storage.sync.get(null, (datas) => {
+        chrome.tabs.query({}, async (tabs) => {
+           await chrome.storage.sync.get(null, (datas) => {
                 const TABS = tabs
                 const DATA_NUM = Object.keys(datas).length
                 const DATA_LENGTH = DATA_NUM !== undefined ? DATA_NUM/COL_NUM : 0;

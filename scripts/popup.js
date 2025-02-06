@@ -8,10 +8,10 @@ let isdelete = false;
 let delete_urls = [];
 let last_block_No;
 
-save_button.addEventListener( "click", () => {
+save_button.addEventListener( "click", async () => {
     if (isdelete) {
         deleteParams();
-        chrome.runtime.sendMessage({ message: "to_background", option: delete_urls }, (response) => {});
+        await chrome.runtime.sendMessage({ message: "to_background", option: delete_urls }, (response) => {});
     }
     setParams(rowNum);
     isdelete = false;
@@ -152,7 +152,6 @@ function getParams() {
         })
 
     });
-    console.log(chrome.storage.sync.get(null))
 }
 
 function setParams(){
