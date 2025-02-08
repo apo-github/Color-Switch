@@ -7,7 +7,7 @@ const COL_NUM = 5
 // そのURLを持つタブ(今回はアクティブtab)に対し、バックグラウンド変更処理をインジェクト
 
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     
     if (request.message === 'to_background') { // 特定の関数からのリクエストかどうかをチェック
         let delete_urls;
@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             delete_urls = request.option
         }
 
-        chrome.tabs.query({}, async (tabs) => {
-           await chrome.storage.sync.get(null, (datas) => {
+        chrome.tabs.query({}, (tabs) => {
+           chrome.storage.sync.get(null, (datas) => {
                 const TABS = tabs
                 const DATA_NUM = Object.keys(datas).length
                 const DATA_LENGTH = DATA_NUM !== undefined ? DATA_NUM/COL_NUM : 0;
@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             let re = new RegExp(settings_url); 
                             if (re.test(TABS[t].url)){ // url pattern match?
                                 let options = {};
-                                options['query_selector_row'] = datas[`query_selector_row_${i}`];
+                                options['css_selector_row'] = datas[`css_selector_row_${i}`];
                                 options['color_row'] = datas[`color_row_${i}`];
                                 options['service_row'] = datas[`service_row_${i}`];
                                 options['id_row'] = datas[`id_row_${i}`];
@@ -42,18 +42,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                         if (chrome.runtime.lastError) {
                                             console.error("メッセージ送信エラー:", chrome.runtime.lastError);
                                         } else {
-                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}, (response)=> {});
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                             console.log("メッセージ送信成功。");
                                         }
                                         break;
                                     case "azure":
-                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}, (response)=> {});
+                                        chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"azure"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                         break;
                                     default:
                                         if (chrome.runtime.lastError) {
                                             console.error("メッセージ送信エラー:", chrome.runtime.lastError);
                                         } else {
-                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}, (response)=> {});
+                                            chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                             console.log("メッセージ送信成功。");
                                         }
                                 }
@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             console.log(TABS[t].url);
                             if (re.test(TABS[t].url)){ // url pattern match?
                                 console.log(delete_urls);
-                                chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}, (response)=> {});
+                                chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                 delete_urls.shift();
                             }
                         });

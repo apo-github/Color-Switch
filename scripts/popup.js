@@ -8,10 +8,10 @@ let isdelete = false;
 let delete_urls = [];
 let last_block_No;
 
-save_button.addEventListener( "click", async () => {
+save_button.addEventListener( "click", () => {
     if (isdelete) {
         deleteParams();
-        await chrome.runtime.sendMessage({ message: "to_background", option: delete_urls }, (response) => {});
+        chrome.runtime.sendMessage({ message: "to_background", option: delete_urls }).then((res)=>{}).catch((e)=>{});
     }
     setParams(rowNum);
     isdelete = false;

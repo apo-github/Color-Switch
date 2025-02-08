@@ -6,13 +6,13 @@ let wait_count = 0;
 let oldUrl = ''; // URLの記憶用
 
 // backgroundを最初に呼び出す
-chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
+chrome.runtime.sendMessage({ message: "to_background" }).then((res)=>{}).catch((e)=>{console.log("runtimeError")});
 
 // urlの変更検知用（Azureに対応）
 const observer = new MutationObserver(() => {
     // ここにDOM変更時の処理を書く
     if(oldUrl !== location.href) {
-        chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
+        chrome.runtime.sendMessage({ message: "to_background" }).then((res)=>{}).catch((e)=>{console.log("runtimeError")}); //ここでruntimeエラー出てるっぽい
         oldUrl = location.href; // oldUrlを更新
     }
 });
@@ -43,9 +43,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
                 break;
             default:
                 DefaultChangeColor(options);
-                // if (!interval_id){
-                //     interval_id = setInterval(() => DefaultChangeColor(options), 1000); // setIntervalは動作がよくわからないので使用をやめた。(settingsの1行目以降の値が読まれない)
-                // } 
         }
 
         
@@ -66,14 +63,14 @@ function wait_loading(){
 }
 
 function DefaultChangeColor(options){
-    if(document.querySelector(options.query_selector_row) !== "" && options.id_row === "") { 
+    if(document.querySelector(options.css_selector_row) !== "" && options.id_row === "") { 
         add_style(options);
     }
     wait_loading();
 }
 
 function AwsChangeColor(options) {
-    if(document.querySelector(options.query_selector_row) !== "") { 
+    if(document.querySelector(options.css_selector_row) !== "") { 
         let user_id = aws_get_user_id()
         if (user_id === options.id_row){
             add_style(options);
@@ -94,7 +91,7 @@ function AzureChangeColor(options) {
 
 function show_settngs(options){
     console.log("=== Settings ===");
-    console.log("Selector: ", options.query_selector_row);
+    console.log("Selector: ", options.css_selector_row);
     console.log("Color: ", options.color_row);
     console.log("service_row", options.service_row)
     console.log("AWS ID: ", options.id_row);
@@ -119,23 +116,19 @@ function azure_much_subscription_id(){
 }
 
 function add_style(options){
-    const BEFORE_STYLE = document.head.querySelector(`#color-change-${options.query_selector_row}`);
+    const BEFORE_STYLE = document.head.querySelector(`#color-change-${options.css_selector_row}`);
     if (BEFORE_STYLE !== null){
         BEFORE_STYLE.remove();//要素が残っていた場合は消す
     }
 
     const style = document.createElement("style");
-    style.id = `color-change-${options.query_selector_row}`
+    style.id = `color-change-${options.css_selector_row}`
     style.innerHTML = `
-    ${options.query_selector_row} {
+    ${options.css_selector_row} {
         background-color: ${options.color_row}!important;
     }
     `;
     document.head.appendChild(style);    
-
-    // // intervalを終える
-    // clearInterval(interval_id);
-    // interval_id = null;
 }
 
 function remove_style(){
@@ -143,8 +136,4 @@ function remove_style(){
     for (let i = 0; i < elements.length; i++) {
         elements[0].remove();
     }
-
-    // // intervalを終える
-    // clearInterval(interval_id);
-    // interval_id = null;
 }
