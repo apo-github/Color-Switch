@@ -1,6 +1,6 @@
 {
     "manifest_version": 3, 
-    "version": "0.9.6", 
+    "version": "1.0.0", 
     "name": "Color Changer | Websites Color Editor", 
     "description": "You can change any part's color, such as buttons, header and background.",
     "permissions":["storage", "tabs"],

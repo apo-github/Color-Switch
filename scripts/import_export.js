@@ -21,7 +21,7 @@ document.querySelector("#export").addEventListener("click", async () => {
       // ダウンロードリンクを生成してクリック
       const a = document.createElement("a");
       a.href = url;
-      a.download = "data.json";
+      a.download = "color_settings.json";
       a.click();
   
       URL.revokeObjectURL(url); // メモリ解放
