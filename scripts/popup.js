@@ -40,9 +40,7 @@ info_icon.addEventListener('click', function(){
 
 function deleteButtonFunc(event){
     const clickedButtonId = event.currentTarget.id;
-    // const clickedButtonId = event.target.id;
-    const buttonNumber = clickedButtonId.match(/\d+/);
-    console.log(clickedButtonId);
+    const buttonNumber = clickedButtonId.match(/\d+/)[0];
     isdelete = true;
     deleteBrock(buttonNumber);
 }
@@ -186,12 +184,11 @@ function deleteParams(){
 
 
 function deleteBrock(delete_No){
-    console.log(delete_No)
     delete_urls.push(document.querySelector(`#url-row-${delete_No}`).value); // backgroundにurlsを渡すのに必要
-    document.querySelectorAll('.row')[delete_No-1].remove();
+    document.querySelector(`#row-${delete_No}`).remove();
     rowNum--;
     
-    if (last_block_No == delete_No){
+    if (last_block_No === delete_No){
         last_block_No = rowNum;
     }
 }
@@ -215,6 +212,7 @@ function updateRowId(){
 
 
 function addBlock(rowNumber){
+    const ROW = `row-${rowNumber}`;
     const URL = `url-row-${rowNumber}`;
     const CSS_SELECTOR = `css-selector-row-${rowNumber}`;
     const COLOR = `color-row-${rowNumber}`;
@@ -223,7 +221,7 @@ function addBlock(rowNumber){
     const DELETE = `delete-row-${rowNumber}`
 
     const newRowHTML = `
-      <div class="row">
+      <div class="row" id="${ROW}">
         <div class="col-4">
           <div class="mb-3 url-div">
               <input
