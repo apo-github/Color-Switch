@@ -10,42 +10,6 @@ const FILE_ERROR_MSG = "JSON format may be incorrect.\nJSONの形式が誤って
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-// Jsonサンプル
-const JSON_SAMPLE = `
-            <pre>
-              <code>
-                {
-                  "row1": {
-                    "url_row_1": "https://www.example.com/",
-                    "css_selector_row_1": ".top-navigation",
-                    "color_row_1": "#746cea",
-                    "service_row_1": "none",
-                    "id_row_1": ""
-                  },
-                  "row2": {
-                    "url_row_2": "https://*.console.aws.amazon.com/",
-                    "css_selector_row_2": ".globalNav-223",
-                    "color_row_2": "#ff0000",
-                    "service_row_2": "aws",
-                    "id_row_2": "012345678912"
-                  }
-                }
-              </code>
-            </pre>`
-// Json format 表示
-const info_icon_btn = document.querySelector("#info-icon")
-let elem = document.querySelector("#show_example");
-elem.insertAdjacentHTML('afterbegin', JSON_SAMPLE);
-
-info_icon_btn.addEventListener("click",()=> {
-  if(elem.style.display == "none"){
-    elem.style.display = "block";
-  }else{
-    elem.style.display = "none";
-  }
-})
-
-
 //エクスポート
 document.querySelector("#export").addEventListener("click", async () => {
     try {
