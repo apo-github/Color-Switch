@@ -83,7 +83,6 @@ function isHTMLUnknownElement(tag){
 function cssValidateFunc(event){
     const elem = event.target
     const elem_value = elem.value
-
     if (event.type == "focus"){
         elem.classList.remove("is-invalid")
         elem.classList.remove("is-valid")
@@ -97,27 +96,46 @@ function cssValidateFunc(event){
             }
         }
     }
-
-    
 }
 
+function convert_params(datas){
+    //データとる
+    const data_num = Object.keys(datas).length
+    const data_length = data_num !== undefined ? data_num/5 : 0;
+    const parent_obj = {}
+    if(datas["row1"] == undefined){
+        for (let i = 1; i <= data_length; i++) {
+            child_obj = {
+                [`url`] : datas[`url_row_${i}`],
+                [`css_selector`] : datas[`css_selector_row_${i}`],
+                [`color`] : datas[`color_row_${i}`],
+                [`service`] : datas[`service_row_${i}`], 
+                [`id`] : datas[`id_row_${i}`]
+            }
+            parent_obj[`row${i}`] = child_obj
+        }
+        return parent_obj
+    }else{
+        //コンバートが必要ないときにここ呼ばれる
+        return datas
+    } 
+}
 
 function getParams() { 
     // storage.sync.get()値がなければデフォルト値が採用される
     // chrome.storage.sync.clear();  // 開発用
     chrome.storage.sync.get(null, function (datas) {//storageから値をすべて取得。コールバック関数で取得した値をpopupに表示。
-        const data_num = Object.keys(datas).length
-        const data_length = data_num !== undefined ? data_num/5 : 0;
-
-        for (let i = 1; i <= data_length; i++) {
+        datas = convert_params(datas) //データをコンバート（次期バージョンでconvert処理は廃止予定）
+        const row_length = Object.keys(datas).length //row length
+        for (let i = 1; i <= row_length; i++) {
             if (i > 1){
                 addBlock(i);
             }
-            document.querySelector(`#url-row-${i}`).value = datas[`url_row_${i}`];
-            document.querySelector(`#css-selector-row-${i}`).value = datas[`css_selector_row_${i}`];
-            document.querySelector(`#color-row-${i}`).value = datas[`color_row_${i}`];
-            document.querySelector(`#service-row-${i}`).value = datas[`service_row_${i}`];
-            document.querySelector(`#id-row-${i}`).value = datas[`id_row_${i}`];        
+            document.querySelector(`#url-row-${i}`).value = datas[`row${i}`][`url`];
+            document.querySelector(`#css-selector-row-${i}`).value = datas[`row${i}`][`css_selector`];
+            document.querySelector(`#color-row-${i}`).value = datas[`row${i}`][`color`];
+            document.querySelector(`#service-row-${i}`).value = datas[`row${i}`][`service`];
+            document.querySelector(`#id-row-${i}`).value = datas[`row${i}`][`id`];        
         }
 
         window.rowNum = document.querySelectorAll(".row").length; // グローバル変数
@@ -148,13 +166,12 @@ function getParams() {
             btn.addEventListener("focus", cssValidateFunc);
             btn.addEventListener('blur', cssValidateFunc);
         })
-
     });
 }
 
 function setParams(){
-    chrome.storage.sync.clear();  // 開発用
-    let data_obj = {};
+    chrome.storage.sync.clear();
+    let parent_obj = {};
 
     for (let i = 1; i <= rowNum; i++){
         let URL = document.querySelector(`#url-row-${i}`).value;
@@ -163,14 +180,17 @@ function setParams(){
         let SERVICE = document.querySelector(`#service-row-${i}`).value;
         let ID = document.querySelector(`#id-row-${i}`).value;
 
-        data_obj[`url_row_${i}`] = URL;
-        data_obj[`css_selector_row_${i}`] = CSS_SELECTOR;
-        data_obj[`color_row_${i}`] = COLOR;
-        data_obj[`service_row_${i}`] = SERVICE;
-        data_obj[`id_row_${i}`] = ID; 
+        child_obj = {
+            [`url`] : URL,
+            [`css_selector`] : CSS_SELECTOR,
+            [`color`] : COLOR,
+            [`service`] : SERVICE, 
+            [`id`] : ID
+        }
+        parent_obj[`row${i}`] = child_obj
     }
 
-    chrome.storage.sync.set(data_obj, function () {
+    chrome.storage.sync.set(parent_obj, function () {
         alert("Saved your settings(｀・ω・´)");
     });
 
@@ -209,7 +229,6 @@ function updateRowId(){
         document.querySelector(`#delete-row-${item.oldNo}`).id = `delete-row-${item.newNo}`;
     });
 }
-
 
 function addBlock(rowNumber){
     const ROW = `row-${rowNumber}`;

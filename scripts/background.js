@@ -6,6 +6,29 @@ const COL_NUM = 5
 // マッチした場合は、そのURLキーと同じ番号キーをすべて取得
 // そのURLを持つタブ(今回はアクティブtab)に対し、バックグラウンド変更処理をインジェクト
 
+function convert_params(datas){
+    //データとる
+    const data_num = Object.keys(datas).length
+    const data_length = data_num !== undefined ? data_num/5 : 0;
+    const parent_obj = {}
+    if(datas["row1"] == undefined){
+        //コンバート
+        for (let i = 1; i <= data_length; i++) {
+            child_obj = {
+                [`url`] : datas[`url_row_${i}`],
+                [`css_selector`] : datas[`css_selector_row_${i}`],
+                [`color`] : datas[`color_row_${i}`],
+                [`service`] : datas[`service_row_${i}`], 
+                [`id`] : datas[`id_row_${i}`]
+            }
+            parent_obj[`row${i}`] = child_obj
+        }
+        return parent_obj
+    }else{
+        //コンバートしない
+        return datas
+    }
+}
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     
@@ -17,23 +40,23 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
         chrome.tabs.query({}, (tabs) => {
            chrome.storage.sync.get(null, (datas) => {
+                datas = convert_params(datas) //データをコンバート（次期バージョンでconvert処理は廃止予定）
                 const TABS = tabs
-                const DATA_NUM = Object.keys(datas).length
-                const DATA_LENGTH = DATA_NUM !== undefined ? DATA_NUM/COL_NUM : 0;
+                const ROW_LENGTH = Object.keys(datas).length //row length
 
                 for (let t = 0; t < TABS.length; t++) {
-                    for (let i = 1; i <= DATA_LENGTH; i++) {
+                    for (let i = 1; i <= ROW_LENGTH; i++) {
                         // 正規表現を生成
-                        let settings_url = datas[`url_row_${i}`];
+                        let settings_url = datas[`row${i}`][`url`];
                         if (settings_url !== "" && settings_url !== undefined){ // not empty and undefined
                             settings_url = settings_url.replace('*', '(.*)');
                             let re = new RegExp(settings_url); 
                             if (re.test(TABS[t].url)){ // url pattern match?
                                 let options = {};
-                                options['css_selector_row'] = datas[`css_selector_row_${i}`];
-                                options['color_row'] = datas[`color_row_${i}`];
-                                options['service_row'] = datas[`service_row_${i}`];
-                                options['id_row'] = datas[`id_row_${i}`];
+                                options['css_selector_row'] = datas[`row${i}`][`css_selector`];
+                                options['color_row'] = datas[`row${i}`][`color`];
+                                options['service_row'] = datas[`row${i}`][`service`];
+                                options['id_row'] = datas[`row${i}`][`id`];
                                 options['tab_id'] = TABS[t];
             
                                 // which service to use?
@@ -43,7 +66,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                                             console.error("メッセージ送信エラー:", chrome.runtime.lastError);
                                         } else {
                                             chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"aws"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
-                                            console.log("メッセージ送信成功。");
                                         }
                                         break;
                                     case "azure":
@@ -54,7 +76,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                                             console.error("メッセージ送信エラー:", chrome.runtime.lastError);
                                         } else {
                                             chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:options, func:"default"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
-                                            console.log("メッセージ送信成功。");
                                         }
                                 }
                             }
@@ -65,11 +86,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                         delete_urls.forEach(url => {
                             let pattern = url.replace('*', '(.*)');
                             let re = new RegExp(pattern);
-                            console.log(delete_urls);
-                            console.log(re);
-                            console.log(TABS[t].url);
                             if (re.test(TABS[t].url)){ // url pattern match?
-                                console.log(delete_urls);
                                 chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                 delete_urls.shift();
                             }
@@ -80,7 +97,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             sendResponse({message: "background received the request"});
         });
     }
-
     return true;
 });
 
