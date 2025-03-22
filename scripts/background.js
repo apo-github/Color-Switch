@@ -23,6 +23,8 @@ function convert_params(datas){
             }
             parent_obj[`row${i}`] = child_obj
         }
+        //set
+        chrome.storage.sync.set(parent_obj);
         return parent_obj
     }else{
         //コンバートしない
