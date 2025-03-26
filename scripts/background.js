@@ -23,6 +23,8 @@ function convert_params(datas){
             }
             parent_obj[`row${i}`] = child_obj
         }
+        //clear
+        chrome.storage.sync.clear();
         //set
         chrome.storage.sync.set(parent_obj);
         return parent_obj
