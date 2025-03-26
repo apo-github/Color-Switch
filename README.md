@@ -12,6 +12,7 @@ https://chromewebstore.google.com/detail/color-switch/cbbnibbcjfjfomnmbdkoobcdel
 
 ## Relese note
 
+- Ver 1.0.3 # published Mar.26 add clear process
 - Ver 1.0.2 # published Mar.23 fixed backgrond function
 - Ver 1.0.1 # published Mar.20
 - Ver 1.0.0 # published Feb.19
