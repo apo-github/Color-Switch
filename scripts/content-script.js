@@ -83,10 +83,7 @@ function AzureChangeColor(options) {
     let re = new RegExp(options.id_row);
     if (re.test(options['tab_id'].url)){
         add_style(options);
-    }else{
-        remove_style(options);
     }
-    // wait_loading();
 }
 
 function show_settngs(options){
@@ -116,13 +113,19 @@ function azure_much_subscription_id(){
 }
 
 function add_style(options){
-    const BEFORE_STYLE = document.head.querySelector(`#color-change-${options.css_selector_row}`);
-    if (BEFORE_STYLE !== null){
-        BEFORE_STYLE.remove();//要素が残っていた場合は消す
+    //先頭の文字に.もしくは#が入っている場合は置換
+    let options_css_selector_row = options.css_selector_row
+    let regexp = /\.|#/;
+    if (regexp.test(options_css_selector_row.slice(0,1))) { 
+        options_css_selector_row = options_css_selector_row.slice(1)
+    }
+    let before_style = document.head.querySelector(`#color-change-${options_css_selector_row}`);
+    if (before_style !== null){
+        before_style.remove();//要素が残っていた場合は消す
     }
 
     const style = document.createElement("style");
-    style.id = `color-change-${options.css_selector_row}`
+    style.id = `color-change-${options_css_selector_row}`
     style.innerHTML = `
     ${options.css_selector_row} {
         background-color: ${options.color_row}!important;
@@ -132,8 +135,9 @@ function add_style(options){
 }
 
 function remove_style(){
-    const elements = document.querySelectorAll("#color-change");
-    for (let i = 0; i < elements.length; i++) {
-        elements[0].remove();
-    }
+    const elements = document.querySelectorAll("[id^='color-change']");
+    elements.forEach(element => {
+        // console.log(element);
+        element.remove();
+    });
 }
