@@ -12,6 +12,7 @@ https://chromewebstore.google.com/detail/color-switch/cbbnibbcjfjfomnmbdkoobcdel
 
 ## Relese note
 
+- Ver 1.0.5 # published Apr.04 small fixed
 - Ver 1.0.4 # published Mar.31 fixed selector name process and Immediate reflection of delete
 - Ver 1.0.3 # published Mar.26 add clear process
 - Ver 1.0.2 # published Mar.23 fixed backgrond function
