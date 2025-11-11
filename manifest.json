@@ -1,6 +1,6 @@
 {
     "manifest_version": 3, 
-    "version": "1.0.7",
+    "version": "1.0.8",
     "name": "Color Changer - Background Color Editor", 
     "description": "Color Changer Extension",
     "permissions":["storage", "tabs"],
