@@ -264,7 +264,7 @@ function addBlock(rowNumber){
         </div>
         <div class="col ps-0">
           <div class="mb-3">
-              <input class="form-control form-control-color" type="color" id="${COLOR}" value="#eabc6c" />
+              <input class="form-control form-control-color" type="color" id="${COLOR}"/>
           </div>
         </div>
         <div class="col-2 pe-0">
@@ -307,5 +307,6 @@ function addBlock(rowNumber){
     
     const plusButton = document.querySelector("#plus");
     plusButton.insertAdjacentHTML('beforebegin', newRowHTML);
+    document.querySelector(`#${COLOR}`).value = "#eabc6c" // デフォルトカラー
 }
 
