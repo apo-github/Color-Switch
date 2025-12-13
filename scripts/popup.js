@@ -29,7 +29,7 @@ add_button.addEventListener('click', function(){
         document.querySelector(`#url-row-${last_block_No}`).addEventListener("focus", urlValidateFunc);
         document.querySelector(`#url-row-${last_block_No}`).addEventListener("blur", urlValidateFunc);
     }else{
-        console.log(`${max_row}行以上は登録できません`)
+        alert(`${max_row}行以上は登録できません`)
     }
 });
 
@@ -192,7 +192,6 @@ function setParams(){
     chrome.storage.sync.set(parent_obj, function () {
         alert("Saved your settings(｀・ω・´)");
     });
-    console.log(rowNum);
     chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
 }
 
