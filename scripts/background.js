@@ -53,7 +53,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                         // 正規表現を生成
                         let settings_url = datas[`row${i}`][`url`];
                         if (settings_url !== "" && settings_url !== undefined){ // not empty and undefined
-                            settings_url = settings_url.replace('*', '(.*)');
                             let re = new RegExp(settings_url); 
                             if (re.test(TABS[t].url)){ // url pattern match?
                                 let options = {};
@@ -88,8 +87,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                     // deleteボタンが押された時に背景をもとに戻す処理
                     if (delete_urls != undefined){
                         delete_urls.forEach(url => {
-                            let pattern = url.replace('*', '(.*)');
-                            let re = new RegExp(pattern);
+                            let re = new RegExp(url);
                             if (re.test(TABS[t].url)){ // url pattern match?
                                 chrome.tabs.sendMessage(TABS[t].id, {message:'to_content_script', options:"", func:"remove"}).then((res)=>{}).catch((e)=>{console.log("runtimeError BG")});
                                 delete_urls.shift();

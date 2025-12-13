@@ -170,16 +170,15 @@ function getParams() {
 }
 
 function setParams(){
-    chrome.storage.sync.clear();
     let parent_obj = {};
-
+    updateRowId();
     for (let i = 1; i <= rowNum; i++){
         let URL = document.querySelector(`#url-row-${i}`).value;
         let CSS_SELECTOR = document.querySelector(`#css-selector-row-${i}`).value;
         let COLOR = document.querySelector(`#color-row-${i}`).value;
         let SERVICE = document.querySelector(`#service-row-${i}`).value;
         let ID = document.querySelector(`#id-row-${i}`).value;
-
+        
         child_obj = {
             [`url`] : URL,
             [`css_selector`] : CSS_SELECTOR,
@@ -189,11 +188,11 @@ function setParams(){
         }
         parent_obj[`row${i}`] = child_obj
     }
-
+    chrome.storage.sync.clear();
     chrome.storage.sync.set(parent_obj, function () {
         alert("Saved your settings(｀・ω・´)");
     });
-
+    console.log(rowNum);
     chrome.runtime.sendMessage({ message: "to_background" }, (response) => {});
 }
 
