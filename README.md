@@ -11,7 +11,8 @@ This Chrome extension can be used from the URL link below
 https://chromewebstore.google.com/detail/color-switch/cbbnibbcjfjfomnmbdkoobcdelfcklka
 
 ## Relese note
-
+- Ver 1.1.0 # published Dec.29 Corrected regular expression notation. Updated documentation.
+- Ver 1.0.9 # published Dec.26 Fixed a bug where storage contents would disappear when performing deletion and addition simultaneously.
 - Ver 1.0.5 # published Apr.04 small fixed
 - Ver 1.0.4 # published Mar.31 fixed selector name process and Immediate reflection of delete
 - Ver 1.0.3 # published Mar.26 add clear process

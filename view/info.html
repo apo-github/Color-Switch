@@ -55,6 +55,9 @@
             <li class="nav-item">
               <a class="nav-link" href="./import_export.html">Import/Export</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./license.html">License</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -111,17 +114,19 @@
               <p>
                 <strong>In the URL</strong>field, specify the URL of the web
                 page for which you want to change the color. You can also use
-                regular expressions.
+                regular expressions.<br />
+                For example, adding ".*" at the end—which represents everything—allows you to highlight all pages where only the latter part of the URL differs!
               </p>
               <p>
                 <strong>URL</strong>
-                には、色を変更したいウェブページのURLを指定します。正規表現が使えます。
+                には、色を変更したいウェブページのURLを指定します。正規表現が使えます。<br />例えばすべてのを表す ".*" を末尾につければ、URLの後半のみが異なるすべてのページに色をつけることができます！
               </p>
+              
               <div class="alert alert-info" role="alert">
-                <p>Example1 (例): 　<code>https://www.google.com/*</code></p>
+                <p>Example1 (例): 　<code>https://www.google.com/.*</code></p>
                 <p>
                   Example2 (例):
-                  　<code>https://en.wikipedia.org/wiki/*</code>　←'*' for all
+                  　<code>https://en.wikipedia.org/wiki/.*</code>　←'.*' for all
                   wiki pages
                 </p>
               </div>
